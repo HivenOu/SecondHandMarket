@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>我的订单</title>
+    <link rel="icon" href="/img/logo.jpg" type="image/x-icon"/>
+    <link rel="stylesheet" href="/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/css/userhome.css"/>
+    <link rel="stylesheet" href="/css/user.css"/>
+
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <script type="text/javascript" src="/js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+
+        /**
+         * 发货
+         * @param orderNum
+         */
+        function ordersDeliver(orderId,btn) {
+            if (confirm("确认发货嘛?")) {
+                $.getJSON("/orders/ordersDeliver/" + orderId, function (result) {
+                    if (result.code == 200) {
+                        alert("发货成功，请送货给对方，并等待确认收货~");
+                        $(btn).val("已发货");
+                        //window.location.reload();
+                    } else {
+                        alert("服务器异常");
+                    }
+                });
+            }
+        }
+
+        function ordersReceipt(orderId, btn) {
+            if (confirm("确认发收货,如果没有收到货请不要确认?")) {
+                $.getJSON("/orders/ordersReceipt/" + orderId, function (result) {
+                    if (result.code == 200) {
+                        alert("收货成功，感谢您的信任~")
+                        $(btn).val("已完成");
+                    } else {
+                        alert("服务器异常");
+                    }
+                });
+            }
+        }
+
+    </script>
+
+</head>
+<body>
+<div class="pre-2" id="big_img">
+    <img src="http://findfun.oss-cn-shanghai.aliyuncs.com/images/head_loading.gif"
+         class="jcrop-preview jcrop_preview_s">
+</div>
+<div id="cover" style="min-height: 639px;">
+    <div id="user_area">
+        <!--顶部-->
+        <div th:replace="@{/user/commons/header}::header"></div>
+        <!--描述：左侧个人中心栏-->
+        <div th:replace="@{/user/commons/nav}::nav"></div>
+        <!--
+        描述：右侧内容区域
+        -->
+        <div id="user_content">
+
+            <div class="share">
+                <!--
+                描述：订单展示
+            -->
+                <h1 style="text-align: center">我的订单</h1>
+                <hr/>
+                <div class="share_content">
+                    <div class="no_share"
+                         th:if="${!(((buy_orders!=null)&&(buy_orders.size()>0))||((seller_orders!=null)&&(seller_orders.size()>0)))}">
+                        <span>没有任何内容，去逛逛其它的吧！</span>
+                    </div>
+                    <div class="story"
+                         th:if="${((buy_orders!=null)&&(buy_orders.size()>0))||((seller_orders!=null)&&(seller_orders.size()>0))}">
+                        <div class="container">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs" role="tablist" style="width: 46%">
+                                <!-- <li class="nav-item"><a class="nav-link active"
+                                    data-toggle="tab" href="#home">全部订单</a></li> -->
+                                <li class="nav-item"><a class="nav-link active" data-toggle="tab"
+                                                        href="#orders_my">买入订单</a></li>
+                                <li class="nav-item"><a class="nav-link" data-toggle="tab"
+                                                        href="#orders_other">卖出订单</a></li>
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div class="tab-content" style="width: 46%">
+                                <!-- 买家订单中心 -->
+                                <div id="orders_my" class="container tab-pane active"
+                                     style="width: 100%">
+                                    <br>
+                                    <form class="form-horizontal" role="form">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                </tr>
+                                                <tr>
+                                                    <th>订单编号</th>
+                                                    <th>名称</th>
+                                                    <th>价格</th>
+                                                    <th>备注</th>
+                                                    <th>操作</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr th:each="o:${buy_orders}">
+                                                    <td th:text="${o.orderNum}">XXX</td>
+                                                    <td th:text="${o.goods.name}">XXX</td>
+                                                    <td th:text="${o.orderPrice}">XXX</td>
+                                                    <td th:text="${o.orderInformation}">XXX</td>
+                                                    <td>
+                                                        <input th:if="${o.orderState==1}" type="button" value="待发货"
+                                                               class="btn btn-info"/>
+                                                        <input th:if="${o.orderState==2}" type="button"
+                                                               value="收&nbsp&nbsp&nbsp&nbsp货"
+                                                               th:onclick="|ordersReceipt(${o.id},this)|"
+                                                               class="btn btn-info"/>
+                                                        <input th:if="${o.orderState==3}" type="button" value="已完成"
+                                                               class="btn btn-info"/>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </form>
+                                </div>
+                                <!-- 卖家订单中心 -->
+                                <div id="orders_other" class="container tab-pane fade"
+                                     style="width: 100%">
+                                    <br>
+                                    <form class="form-horizontal" role="form">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                </tr>
+                                                <tr class="text-center">
+                                                    <th>订单编号</th>
+                                                    <th>名称</th>
+                                                    <th>价格</th>
+                                                    <th>备注</th>
+                                                    <th>操作</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr th:each="o:${seller_orders}">
+                                                    <td th:text="${o.orderNum}">XXX</td>
+                                                    <td th:text="${o.goods.name}">XXX</td>
+                                                    <td th:text="${o.orderPrice}">XXX</td>
+                                                    <td th:text="${o.orderInformation}">XXX</td>
+                                                    <td>
+
+                                                        <input th:if="${o.orderState==1}" type="button"
+                                                               value="发&nbsp&nbsp&nbsp&nbsp货"
+                                                               th:onclick="|ordersDeliver(${o.id},this)|"
+                                                               class="btn btn-info"/>
+                                                        <input type="button" th:if="${o.orderState==2}" value="待收货"
+                                                               class="btn btn-info"/>
+                                                        <input type="button" th:if="${o.orderState==3}" value="已完成"
+                                                               class="btn btn-info"/>
+
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

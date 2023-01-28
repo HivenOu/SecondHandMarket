@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="user_nav" th:fragment="nav">
+    <div class="user_info">
+        <div class="head_img">
+            <img src="/img/photo.jpg">
+        </div>
+        <div class="big_headimg">
+            <img src="">
+        </div>
+        <span class="name" th:text="${session.loginUser.username}">XXX</span><hr>
+<!--        <span class="school">XXX学院</span>-->
+        <a class="btn" style="width: 98%;background-color: rgb(79, 190, 246);color:rgba(255, 255, 255, 1);" href="/purse/toPurseResult">我的钱包：￥<span th:text="${session.purse.balance}">XXX</span></a>
+        <input type="hidden" th:value="${session.purse.recharge}" id="recharge"/>
+        <input type="hidden" th:value="${session.purse.withdrawals}" id="withdrawals"/>
+        <span class="btn" data-toggle="modal" data-target="#myModal" style="width: 98%;background-color: rgb(79, 190, 246); color:rgba(255, 255, 255, 1);margin-top:0.5cm;">我的信用积分：<span th:text="${session.loginUser.power}">XXX</span></span>
+    </div>
+    <div class="home_nav">
+        <ul>
+            <a href="/notice/toHome">
+                <li class="notice">
+                    <div></div>
+                    <span>求购信息</span>
+                    <strong></strong>
+                </li>
+            </a>
+            <a href="/orders/myOrders">
+                <li class="notice">
+                    <div></div>
+                    <span>我的订单</span>
+                    <strong></strong>
+                </li>
+            </a>
+            <a href="/focus/myFocus">
+                <li class="fri">
+                    <div></div>
+                    <span>我的关注</span>
+                    <strong></strong>
+                </li>
+            </a>
+            <a href="/topubGoods">
+                <li class="store">
+                    <div></div>
+                    <span>发布物品</span>
+                    <strong></strong>
+                </li>
+            </a>
+            <a href="/findMyPublishGoods">
+                <li class="second">
+                    <div></div>
+                    <span>我的闲置</span>
+                    <strong></strong>
+                </li>
+            </a>
+            <a href="/purse/toPurse" th:if="${session.purse.state==null}">
+                <li class="set">
+                    <div></div>
+                    <span>充值提现</span>
+                    <strong></strong>
+                </li>
+            </a>
+            <a href="/purse/toPurseResult" th:if="${session.purse.state!=null}">
+                <li class="set">
+                    <div></div>
+                    <span>审批状态</span>
+                    <strong></strong>
+                </li>
+            </a>
+            <a href="/toBasic">
+                <li class="set">
+                    <div></div>
+                    <span>个人设置</span>
+                    <strong></strong>
+                </li>
+            </a>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>个人设置</title>
+    <link rel="icon" href="/img/logo.jpg" type="image/x-icon"/>
+    <link rel="stylesheet" href="/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/css/userhome.css"/>
+    <link rel="stylesheet" href="/css/user.css"/>
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <script type="text/javascript" src="/js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="pre-2" id="big_img">
+    <img src="http://findfun.oss-cn-shanghai.aliyuncs.com/images/head_loading.gif"
+         class="jcrop-preview jcrop_preview_s">
+</div>
+<div id="cover" style="min-height: 639px;">
+    <div id="user_area">
+        <!--顶部-->
+        <div th:replace="@{/user/commons/header}::header"></div>
+        <!--描述：左侧个人中心栏-->
+        <div th:replace="@{/user/commons/nav}::nav"></div>
+        <!--
+            描述：右侧内容区域
+        -->
+        <div id="user_content">
+            <div class="basic">
+                <form action="/updateInfo" id="updateForm" method="post" commandName="user" role="form">
+                    <h1>完善与修改个人信息</h1>
+                    <hr/>
+                    <div class="changeinfo">
+                        <span>昵称：</span>
+                        <input type="hidden" name="id" th:value="${session.loginUser.id}"/>
+                        <input class="in_info" type="text" name="username" placeholder="请输入昵称"
+                               th:value="${session.loginUser.username}"/>
+                    </div>
+                    <hr/>
+                    <div class="changeinfo">
+                        <span>开通时间：</span>
+                        <input class="in_info" type="text" name="createAt" th:value="${session.loginUser.createAt}"
+                               readonly="true"/>
+                    </div>
+                    <hr/>
+                    <div class="changeinfo">
+                        <span>手机号码：</span>
+                        <input class="in_info" type="text" name="phone" th:value="${session.loginUser.phone}"
+                               readonly="true"/>
+                        <span id="checkphone">已验证</span>
+                    </div>
+                    <hr/>
+                    <div class="changeinfo">
+                        <span>QQ：</span>
+                        <input class="in_info" type="text" name="qq" placeholder="请输入QQ"
+                               th:value="${session.loginUser.qq}"/>
+                    </div>
+                    <input type="button" onclick="updateUser();" class="setting-save" value="保存修改信息"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    function updateUser() {
+
+        var data = $("#updateForm").serialize();
+        alert(JSON.stringify(data));
+        if(confirm("确认要更新嘛?")){
+            $.post("/updateInfo", data, function (result) {
+                if (result.code == 200) {
+                    alert("个人信息完善成功");
+                    location.reload();
+                } else {
+                    alert("服务器异常，稍后再试");
+                }
+            }, "json");
+        }
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>我的关注</title>
+    <link rel="icon" href="/img/logo.jpg" type="image/x-icon"/>
+    <link rel="stylesheet" href="/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/css/emoji.css" />
+    <link rel="stylesheet" href="/css/userhome.css" />
+    <link rel="stylesheet" href="/css/user.css" />
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <script type="text/javascript" src="/js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="pre-2" id="big_img">
+    <img src="http://findfun.oss-cn-shanghai.aliyuncs.com/images/head_loading.gif" class="jcrop-preview jcrop_preview_s">
+</div>
+<div id="cover" style="min-height: 639px;">
+    <div id="user_area">
+        <!--顶部-->
+        <div th:replace="@{/user/commons/header}::header"></div>
+        <!--描述：左侧个人中心栏-->
+        <div th:replace="@{/user/commons/nav}::nav"></div>
+        <!--描述：左侧个人中心栏-->
+        <!--
+            描述：右侧内容区域
+        -->
+        <div id="user_content">
+            <div class="share">
+                <!--描述：关注商品展示-->
+                <h1 style="text-align: center">我的关注</h1>
+                <hr />
+                <div class="share_content">
+
+                    <div class="no_share" th:if="${goodsList==null||goodsList.size()==0}">
+                        <span>您还没有关注任何人哦~</span>
+                    </div>
+
+                    <!--数据区域-->
+                    <div class="story" th:each="gg:${goodsList}">
+                        <a href="/goods/goodsId/${items.goods.id}" class="head_img">
+                            <img th:src="|/upload/${gg.imageUrl}|">
+                        </a>
+                        <span class="name" style="margin-left:30px;" th:text="${gg.name}">二手笔记本电脑一台</span>
+                        <span class="text" style="overflow: hidden; outline: none;" th:text="${gg.describle}">1成新笔记本电脑，非常好用！！</span>
+                        <div class="box">
+                            <div class="box_content">
+                                <div class="left_shadow"></div>
+                                <div class="left" index="1" style="display: none;">&lt;</div>
+                                <div class="right_shadow"></div>
+                                <div class="left" index="3" style="display: none;">&gt;</div>
+                                <img th:src="|/upload/${gg.imageUrl}|" index="2">
+                                <span class="com" style="display: none;left: 396.733px;"></span>
+                            </div>
+                            <div class="interact">
+                                <span class="fa fa-heart fa-lg"><a th:href="|/goodsDetails/${gg.id}|">前往购买</a></span>
+                                <span class="fa fa-heart-o fa-lg"><a th:href="|javascript:cancelGoods(${gg.id});|">取消关注</a></span>
+                            </div><br>
+                            <div class="like_detail">
+                                <div class="like_content">
+                                    <span th:if="${gg.status==0}">下架时间：<span th:text="${gg.endTime}"></span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+
+        function cancelGoods(goodsId) {
+            if(confirm("确认取消关注嘛?")){
+                $.post("/focus/cancelFocus",{"goodsId":goodsId},function (result) {
+                    if(result.code==200){
+                        alert("取消关注成功");
+                        window.location.reload();
+                    }else{
+                        alert("服务器异常");
+                    }
+                },"json");
+            }
+        }
+
+    </script>
+</div>
+</body>
+</html>

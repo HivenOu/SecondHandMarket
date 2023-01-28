@@ -1,0 +1,11 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.secondhandmarket.mapper.PurseMapper">
+
+
+    <update id="update">
+        update purse set balance=#{balance},recharge=#{recharge},withdrawals=#{withdrawals},state=#{state} where id=#{id}
+    </update>
+
+</mapper>

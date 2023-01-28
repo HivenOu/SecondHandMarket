@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>确认订单</title>
+    <link rel="icon" href="/img/logo.jpg" type="image/x-icon" />
+    <link rel="stylesheet" href="/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/css/userhome.css" />
+    <link rel="stylesheet" href="/css/user.css" />
+
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <script type="text/javascript" src="/js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+
+    <!--订单编号随机数（有可能重复，得处理）  -->
+    <script type="text/javascript">
+        window.onload = function() {
+            var o = document.getElementsByClassName('order-num');
+            o[0].value = fRandomBy(00000000, 99999999);
+        }
+
+        function fRandomBy(under, over) {
+            switch (arguments.length) {
+                case 1:
+                    return parseInt(Math.random() * under + 1);
+                case 2:
+                    return parseInt(Math.random() * (over - under + 1) + under);
+                default:
+                    return 0;
+            }
+        }
+    </script>
+
+</head>
+<body>
+<div class="pre-2" id="big_img">
+    <img
+            src="http://findfun.oss-cn-shanghai.aliyuncs.com/images/head_loading.gif"
+            class="jcrop-preview jcrop_preview_s">
+</div>
+<div id="cover" style="min-height: 639px;">
+    <div id="user_area">
+        <!--顶部-->
+        <div th:replace="@{/user/commons/header}::header"></div>
+        <!--描述：左侧个人中心栏-->
+        <div th:replace="@{/user/commons/nav}::nav"></div>
+        <!--描述：右侧内容区域-->
+        <div id="user_content">
+            <div class="share">
+                <!--
+                描述：关注商品展示
+            -->
+                <h1 style="text-align: center">确认订单</h1>
+                <hr />
+                <div class="share_content">
+                    <div class="story">
+                        <form class="form-horizontal" role="form" id="orderForm">
+                            <h4 >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;订单编号：
+                                <input name="orderNum" class="order-num" type="text" style="border:0px;background:rgba(0, 0, 0, 0);" value=""/>
+                                <input name="goodsId" type="hidden" th:value="${goods.id}"/> </h4>
+                            <div class="form-group">
+                                <label  class="col-sm-2 control-label">图片:</label>
+                                <div class="col-sm-10">
+                                    <img style="height:150px;weight:150px;"th:src="|/upload/${goods.imageUrl}|" />
+                                </div>
+                                <label  class="col-sm-2 control-label">名称：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" disabled="disabled" style="border:0px;background:rgba(0, 0, 0, 0); " th:value="${goods.name}" >
+                                </div>
+                                <label  class="col-sm-2 control-label">价格：</label>
+                                <div class="col-sm-10">
+                                    <input name="orderPrice" type="text" class="form-control" style="border:0px;background:rgba(0, 0, 0, 0); " th:value="${goods.price}">
+                                </div>
+                                <label  class="col-sm-2 control-label" >备注：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control"
+                                           placeholder="请输入备注（收获人信息 地址 联系方式等）" value="" name="orderInformation">
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="form-group">
+                                <div class="col-sm-offset-4 col-sm-8">
+                                    <a th:href="|/goodsDetails/${goods.id}|" class="btn btn-danger">取消支付</a>
+                                    <button th:if="${session.purse.balance>=goods.price}" type="button" onclick="addOrders();" class="btn btn-info">立即支付</button>
+                                    <button th:if="${session.purse.balance<goods.price}" type="button" onclick="location.href='/purse/toPurse';" class="btn btn-danger">余额不足，请充值！</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <script>
+
+                    //新增订单
+                    function addOrders() {
+                        var data=$("#orderForm").serialize();
+                        $.post("/orders/createOrder",data,function (result) {
+                            if(result.code==200){
+                                alert("订单支付完毕,可以进行订单查询啦~~~");
+                                location.href="/orders/myOrders";
+                            }else{
+                                alert("服务器异常！")
+                            }
+                        });
+                    }
+
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

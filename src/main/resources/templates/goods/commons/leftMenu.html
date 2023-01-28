@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<!--
+
+    描述：左侧导航条
+-->
+<div th:fragment="left" ng-controller="sidebarController" class="sidebar stark-components ng-scope">
+    <li ng-class="{true: 'active'}[isAll]">
+        <a href="/findNewGoodsByCatelogId/8" class="index">
+            <img src="/img/index.png">
+            <em>最新发布</em>
+        </a>
+    </li>
+    <li ng-class="{true: 'active'}[isDigital]">
+        <a href="/findNewGoodsByCatelogId/1" class="digital">
+            <img src="/img/digital.png"  />
+            <em>手机数码</em>
+        </a>
+    </li>
+    <li ng-class="{true: 'active'}[isRide]">
+        <a href="/findNewGoodsByCatelogId/2" class="ride">
+            <img src="/img/ride.png"/>
+            <em>运动户外</em>
+        </a>
+    </li>
+    <li ng-class="{true: 'active'}[isCommodity]">
+        <a href="/findNewGoodsByCatelogId/3" class="commodity">
+            <img src="/img/commodity.png"/>
+            <em>日用电器</em>
+        </a>
+    </li>
+    <li ng-class="{true: 'active'}[isBook]">
+        <a href="/findNewGoodsByCatelogId/4" class="book">
+            <img src="/img/book.png"/>
+            <em>图书教材</em>
+        </a>
+    </li>
+    <li ng-class="{true: 'active'}[isMakeup]">
+        <a href="/findNewGoodsByCatelogId/5" class="makeup">
+            <img src="/img/makeup.png"/>
+            <em>服饰美妆</em>
+        </a>
+    </li>
+    <li ng-class="{true: 'active'}[isSport]">
+        <a href="/findNewGoodsByCatelogId/6" class="sport">
+            <img src="/img/sport.png"/>
+            <em>体育器材</em>
+        </a>
+    </li>
+    <li ng-class="{true: 'active'}[isSmallthing]">
+        <a href="/findNewGoodsByCatelogId/7" class="smallthing">
+            <img src="/img/smallthing.png"/>
+            <em>生活百货</em>
+        </a>
+    </li>
+    <div class="info">
+        <a href="#">关于我们</a><em>-</em>
+        <a href="#">联系我们</a>
+        <p>校园二手市场</p>
+    </div>
+</div>
+
+</body>
+</html>

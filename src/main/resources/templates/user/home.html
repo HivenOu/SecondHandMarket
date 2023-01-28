@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>个人中心</title>
+    <link rel="icon" href="/img/logo.jpg" type="image/x-icon"/>
+    <link rel="stylesheet" href="/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/css/emoji.css" />
+    <link rel="stylesheet" href="/css/userhome.css" />
+    <link rel="stylesheet" href="/css/user.css" />
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <script type="text/javascript" src="/js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap-paginator.min.js"></script>
+    <script type="text/javascript">
+
+        function viewPersonal(id){
+            $.ajax({
+                url:'/admin/getUser',
+                type:'GET',
+                data:{id:id},
+                dataType:'json',
+                success:function(json){
+                    if(json){
+                        $('#myviewform').find("input[name='phone']").val(json.phone);
+                        $('#myviewform').find("input[name='username']").val(json.username);
+                        $('#myviewform').find("input[name='qq']").val(json.qq);
+                        $('#myviewform').find("input[name='power']").val(json.power);
+                        $('#myviewform').find("input[name='createAt']").val(json.createAt);
+                        $('#viewModal').modal('toggle');
+                    }
+                },
+                error:function(){
+                    alert('请求超时或系统出错!');
+                    $('#viewModal').modal('hide');
+                }
+            });
+        }
+
+        function sendContext(){
+            var context= $("#mycontext").text();
+            $.ajax({
+                url:'/notice/insertSelective',
+                type:'POST',
+                data:{context:context},
+                dataType:'json',
+                success:function(result){
+                    if(result.code==200){
+                        alert("求购细信息发布成功");
+                        location.reload();
+                    }else{
+                        alert('请求超时或系统出错!');
+                    }
+                },
+                error:function(){
+                    alert('请求超时或系统出错!');
+                }
+            });
+        }
+
+        $(function(){
+            var options={
+                bootstrapMajorVersion:1,    //版本
+                currentPage:1,    //当前页数
+                numberOfPages:5,    //最多显示Page页
+                totalPages:10,    //所有数据可以显示的页数
+                onPageClicked:function(e,originalEvent,type,page){
+                    console.log("e");
+                    console.log(e);
+                    console.log("originalEvent");
+                    console.log(originalEvent);
+                    console.log("type");
+                    console.log(type);
+                    console.log("page");
+                    console.log(page);
+                }
+            }
+            //$("#page").bootstrapPaginator(options);
+        })
+    </script>
+
+</head>
+<body>
+<div class="pre-2" id="big_img">
+    <img src="/img/head_loading.gif" class="jcrop-preview jcrop_preview_s">
+</div>
+<div id="cover" style="min-height: 639px;">
+    <div id="user_area">
+        <!--顶部-->
+        <div th:replace="@{/user/commons/header}::header"></div>
+        <!--描述：左侧个人中心栏-->
+        <div th:replace="@{/user/commons/nav}::nav"></div>
+        <!--
+
+            描述：右侧内容区域
+        -->
+        <div id="user_content">
+            <div class="share">
+
+                <img src="/img/Advertisement.png">
+
+                <div class="publish">
+                    <form role="form" id="contextForm">
+                        <div class="pub_content">
+                            <div class="text_pub lead emoji-picker-container">
+                                <input type="text" name="context" data-emojiable="converted"  class="form-control" data-type="original-input" style="display: none;"/>
+                                <div class="emoji-wysiwyg-editor form-control" data-type="input" id="mycontext" contenteditable="true"></div>
+                                <!-- <i class="emoji-picker-icon emoji-picker face" data-type="picker" style="top: 153px;"></i> -->
+                                <div class="tag"></div>
+                            </div>
+                            <div class="img_pub">
+                                <ul></ul>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="button">
+                        <div class="checkbox" style="width:135px;">
+                            <button onclick="sendContext()">发 布</button>
+                        </div>
+                    </div>
+
+                </div>
+                <!--
+
+                    描述：闲置商品展示
+                -->
+                <div class="share_content">
+                    <div class="no_share" th:if="${noticeList==null||noticeList.size()==0}">
+                        <span>没有任何内容，去逛逛其它的吧！</span>
+                    </div>
+                    <div class="yes_share" th:if="${(noticeList!=null)&&(noticeList.size()>0)}">
+                        <h1 style="text-align: center;">求购信息</h1><hr>
+                           <span th:each="notice:${noticeList}">
+                               <button type="button" class="btn btn-info" onclick="viewPersonal(${item.user.id})" style="background-color: #c6f5f4;border:0px;outline:none;" th:text="${notice.user.username}">XXX</button>
+                                <span >说：&nbsp;&nbsp;&nbsp;&nbsp;<span th:text="${notice.context}">XXX</span></span><br>
+                                <p style="text-align:right;color:#4fbef6;">发布时间：<span th:text="${notice.createAt}"></span></p>
+                                <hr>
+                                <br>
+                           </span>
+                        <div id="page" style="center"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title middle" id="myModalLabel">查看用户信息</h4>
+            </div>
+            <div class="modal-body" style="height: 220px;">
+                <form id="myviewform">
+                    <div class="form-group">
+                        <label for="message-text1" class="control-label col-sm-2" >名称:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="message-text1" name="username" readonly/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text2" class="control-label col-sm-2">手机号:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="message-text2" name="phone" readonly/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text3" class="control-label col-sm-2">qq号:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="message-text3" name="qq" readonly/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text4" class="control-label col-sm-2">信用积分:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="message-text4" name="power" readonly/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text5" class="control-label col-sm-2">开户时间:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="message-text5" name="createAt" readonly/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+</body>
+</html>

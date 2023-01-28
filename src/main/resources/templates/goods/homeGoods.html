@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <title>校园二手交易市场</title>
+    <link rel="icon" href="/img/logo.jpg" type="image/x-icon"/>
+    <link rel="stylesheet" href="/css/index.css" />
+    <script type="text/javascript" src="/js/jquery.js" ></script>
+    <script type="text/javascript" src="/js/materialize.min.js" ></script>
+    <script type="text/javascript" src="/js/index.bundle.js" ></script>
+    <link rel="stylesheet" href="/css/materialize-icon.css" />
+    <link rel="stylesheet" href="/css/user.css" />
+    <script>
+        function showLogin() {
+            if($("#signup-show").css("display")=='block'){
+                $("#signup-show").css("display","none");
+            }
+            if($("#login-show").css("display")=='none'){
+                $("#login-show").css("display","block");
+            }else{
+                $("#login-show").css("display","none");
+            }
+        }
+        function showSignup() {
+            if($("#login-show").css("display")=='block'){
+                $("#login-show").css("display","none");
+            }
+            if($("#signup-show").css("display")=='none'){
+                $("#signup-show").css("display","block");
+            }else{
+                $("#signup-show").css("display","none");
+            }
+        }
+        function ChangeName() {
+            if($("#changeName").css("display")=='none'){
+                $("#changeName").css("display","block");
+            }else{
+                $("#changeName").css("display","none");
+            }
+        }
+
+        $(document).ready(function(){
+            //异步验证
+            $("#phone").blur(function(){
+                var phone=$(this).val();
+                $.ajax({
+                    url:'/user/register',
+                    type:'POST',
+                    data:{phone:phone},
+                    dataType:'json',
+                    success:function(json){
+                        if(json.flag){
+                            $("#errorPhone").html("账号已被注册，请重新输入!");
+                            $("#register").attr("disabled",true);
+                        }else{
+                            $("#errorPhone").empty();
+                            $("#register").attr("disabled",false);
+                        }
+                    },
+                    error:function(){
+                        alert('请求超时或系统出错!');
+                    }
+                });
+            });
+
+          $("#login_password").blur(function(){
+                var phone=$("#login_phone").val();
+                var password=$(this).val();
+                $.ajax({
+                    url:'/user/password',
+                    type:'POST',
+                    data:{phone:phone,password:password},
+                    dataType:'json',
+                    success:function(json){
+                        if(json){
+                            if(json.flag){
+                                $("#errorPassword").html("请核对账号密码，再重新输入!");
+                                $("#loginIn").attr("disabled",true);
+                            }else{
+                                $("#errorPassword").empty();
+                                $("#loginIn").attr("disabled",false);
+                            }
+                        }else{
+                            if(json.flag){
+                                $("#errorPassword").html("请输入的密码有误!");
+                                $("#loginIn").attr("disabled",true);
+                            }if(json.flag==false){
+                                $("#login_errorPhone").html("您输入的在账号有误!");
+                                $("#loginIn").attr("disabled",true);
+                            }
+                        }
+                    },
+                    error:function(json){
+                        alert("系统出错啦")
+                    }
+                });
+
+            });
+
+        });
+
+    </script>
+
+
+<body ng-view="ng-view">
+
+<!--描述：顶部-->
+<div th:replace="@{/goods/commons/header}::header"></div>
+<!--描述：登录-->
+<div th:replace="@{/goods/commons/login}::login"></div>
+<!-- 描述：注册-->
+<div th:replace="@{/goods/commons/signup}::signup"></div>
+<!--更改用户名-->
+<div th:replace="@{/goods/commons/changeName}::changeName"></div>
+<!--描述：左侧导航条-->
+<div th:replace="@{/goods/commons/leftMenu}::left"></div>
+
+<!--
+
+    描述：右侧显示部分
+-->
+<div class="main-content">
+    <!--
+
+        描述：右侧banner（图片）部分
+    -->
+    <div class="slider-wapper">
+        <div class="slider" style="height: 440px; touch-action: pan-y; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);">
+            <ul class="slides" style="height: 400px;">
+                <li class="active" style="opacity: 1;">
+                    <a href="/goods/homeGoods">
+                        <div class="bannerimg">
+                            <ul class="bannerul">
+                                <p class="text1"></p>
+                                <p class="text2"></p>
+                                <p class="text3"></p>
+                                <p class="text4"></p>
+                                <p class="text5"></p>
+                                <p class="text6"></p>
+                            </ul>
+                            <!--   <div class="logoimg">
+                                  <img src="../img/p_logo.jpg" />
+                              </div> -->
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--
+
+        描述：最新发布
+    -->
+    <div class="index-title">
+        <a href="">最新发布</a>
+        <hr class="hr1">
+        <hr class="hr2">
+    </div>
+    <div class="waterfoo stark-components row">
+        <div class="item-wrapper normal">
+                <div class="card col" th:each="goods:${goodsList0}">
+                    <a th:href="|/goodsDetails/${goods.id}|">
+                        <div class="card-image">
+                            <img th:src="|/upload/${goods.imageUrl}|" />
+                        </div>
+                        <div class="card-content item-price" th:text="${goods.price}">XX</div>
+                        <div class="card-content item-name">
+                            <p th:text="${goods.name}">XXX</p>
+                        </div>
+                        <div class="card-content item-location">
+                            <p></p>
+                            <p th:text="${goods.startTime}">XXX</p>
+                        </div>
+                    </a>
+                </div>
+        </div>
+    </div>
+    <!--
+
+        描述：手机数码
+    -->
+    <div class="index-title">
+        <a href="">手机数码</a>
+        <hr class="hr1">
+        <hr class="hr2">
+    </div>
+    <div class="waterfoo stark-components row">
+        <div class="item-wrapper normal">
+            <div class="card col" th:each="goods:${goodsList1}">
+                <a th:href="|/goodsDetails/${goods.id}|">
+                    <div class="card-image">
+                        <img th:src="|/upload/${goods.imageUrl}|" />
+                    </div>
+                    <div class="card-content item-price" th:text="${goods.price}">XX</div>
+                    <div class="card-content item-name">
+                        <p th:text="${goods.name}">XXX</p>
+                    </div>
+                    <div class="card-content item-location">
+                        <p></p>
+                        <p th:text="${goods.startTime}">XXX</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!--
+
+        描述：运动户外
+    -->
+    <div class="index-title">
+        <a href="">运动户外</a>
+        <hr class="hr1">
+        <hr class="hr2">
+    </div>
+    <div class="waterfoo stark-components row">
+        <div class="item-wrapper normal">
+            <div class="card col" th:each="goods:${goodsList2}">
+                <a th:href="|/goodsDetails/${goods.id}|">
+                    <div class="card-image">
+                        <img th:src="|/upload/${goods.imageUrl}|" />
+                    </div>
+                    <div class="card-content item-price" th:text="${goods.price}">XX</div>
+                    <div class="card-content item-name">
+                        <p th:text="${goods.name}">XXX</p>
+                    </div>
+                    <div class="card-content item-location">
+                        <p></p>
+                        <p th:text="${goods.startTime}">XXX</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="index-title">
+        <a href="">日用电器</a>
+        <hr class="hr1">
+        <hr class="hr2">
+    </div>
+    <div class="waterfoo stark-components row">
+        <div class="item-wrapper normal">
+            <div class="card col" th:each="goods:${goodsList3}">
+                <a th:href="|/goodsDetails/${goods.id}|">
+                    <div class="card-image">
+                        <img th:src="|/upload/${goods.imageUrl}|" />
+                    </div>
+                    <div class="card-content item-price" th:text="${goods.price}">XX</div>
+                    <div class="card-content item-name">
+                        <p th:text="${goods.name}">XXX</p>
+                    </div>
+                    <div class="card-content item-location">
+                        <p></p>
+                        <p th:text="${goods.startTime}">XXX</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="index-title">
+        <a href="">图书教材</a>
+        <hr class="hr1">
+        <hr class="hr2">
+    </div>
+    <div class="waterfoo stark-components row">
+        <div class="item-wrapper normal">
+            <div class="card col" th:each="goods:${goodsList4}">
+                <a th:href="|/goodsDetails/${goods.id}|">
+                    <div class="card-image">
+                        <img th:src="|/upload/${goods.imageUrl}|" />
+                    </div>
+                    <div class="card-content item-price" th:text="${goods.price}">XX</div>
+                    <div class="card-content item-name">
+                        <p th:text="${goods.name}">XXX</p>
+                    </div>
+                    <div class="card-content item-location">
+                        <p></p>
+                        <p th:text="${goods.startTime}">XXX</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="index-title">
+        <a href="">服饰美妆</a>
+        <hr class="hr1">
+        <hr class="hr2">
+    </div>
+    <div class="waterfoo stark-components row">
+        <div class="item-wrapper normal">
+            <div class="card col" th:each="goods:${goodsList5}">
+                <a th:href="|/goodsDetails/${goods.id}|">
+                    <div class="card-image">
+                        <img th:src="|/upload/${goods.imageUrl}|" />
+                    </div>
+                    <div class="card-content item-price" th:text="${goods.price}">XX</div>
+                    <div class="card-content item-name">
+                        <p th:text="${goods.name}">XXX</p>
+                    </div>
+                    <div class="card-content item-location">
+                        <p></p>
+                        <p th:text="${goods.startTime}">XXX</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="index-title">
+        <a href="">体育器材</a>
+        <hr class="hr1">
+        <hr class="hr2">
+    </div>
+    <div class="waterfoo stark-components row">
+        <div class="item-wrapper normal">
+            <div class="card col" th:each="goods:${goodsList6}">
+                <a th:href="|/goodsDetails/${goods.id}|">
+                    <div class="card-image">
+                        <img th:src="|/upload/${goods.imageUrl}|" />
+                    </div>
+                    <div class="card-content item-price" th:text="${goods.price}">XX</div>
+                    <div class="card-content item-name">
+                        <p th:text="${goods.name}">XXX</p>
+                    </div>
+                    <div class="card-content item-location">
+                        <p></p>
+                        <p th:text="${goods.startTime}">XXX</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="index-title">
+        <a href="">生活百货</a>
+        <hr class="hr1">
+        <hr class="hr2">
+    </div>
+    <div class="waterfoo stark-components row">
+        <div class="item-wrapper normal">
+            <div class="card col" th:each="goods:${goodsList7}">
+                <a th:href="|/goodsDetails/${goods.id}|">
+                    <div class="card-image">
+                        <img th:src="|/upload/${goods.imageUrl}|" />
+                    </div>
+                    <div class="card-content item-price" th:text="${goods.price}">XX</div>
+                    <div class="card-content item-name">
+                        <p th:text="${goods.name}">XXX</p>
+                    </div>
+                    <div class="card-content item-location">
+                        <p></p>
+                        <p th:text="${goods.startTime}">XXX</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

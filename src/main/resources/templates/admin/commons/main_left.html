@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body >
+<!--sidebar-menu-->
+<div id="sidebar" th:fragment="left">
+    <ul>
+        <li class="submenu"><a href="#"><i class="icon icon-group"></i>
+            <span>用户管理</span> </a>
+            <ul>
+                <li><a href="/user/page">用户列表</a></li>
+            </ul>
+        </li>
+        <li class="submenu"><a href="#"><i class="icon icon-signal"></i>
+            <span>商品管理</span> </a>
+            <ul>
+                <li><a href="/goods/page">商品列表</a></li>
+            </ul>
+        </li>
+        <li class="submenu"><a href="#"><i class="icon icon-th"></i>
+            <span>订单管理</span> </a>
+            <ul>
+                <li><a href="/orders/page">订单列表</a></li>
+            </ul>
+        </li>
+        <li class="submenu"><a href="#"><i class="icon icon-inbox"></i>
+            <span>钱包管理</span> </a>
+            <ul>
+                <li><a href="/purse/page">钱包列表</a></li>
+            </ul>
+        </li>
+        <li class="submenu"><a href="#"><i class="icon icon-fullscreen"></i>
+            <span>系统设置</span> </a>
+            <ul>
+                <li><a href="/admin/toInfo">个人信息</a></li>
+                <li><a href="/admin/tomodify">修改密码</a></li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+</body>
+</html>
