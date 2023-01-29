@@ -74,6 +74,7 @@
             <artifactId>mysql-connector-java</artifactId>
             <!--默认Mysql驱动是8的驱动，如果是5的数据库改为5-->
             <!--<version>5.1.28</version>-->
+            <version>8.0.32</version>
         </dependency>
 
         <!-- swagger-spring-boot  swagger场景启动器 -->
@@ -92,12 +93,19 @@
     </dependencies>
 
     <build>
+        <finalName>app</finalName>
         <plugins>
             <!-- springboot maven打包插件 -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
 

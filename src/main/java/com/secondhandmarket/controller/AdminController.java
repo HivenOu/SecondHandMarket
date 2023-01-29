@@ -4,6 +4,7 @@ import com.secondhandmarket.pojo.Admin;
 import com.secondhandmarket.service.AdminService;
 import com.secondhandmarket.utils.ResultCode;
 import com.secondhandmarket.utils.ResultCommon;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("admin")
+@Slf4j
 public class AdminController {
 
     @Autowired
@@ -43,6 +45,7 @@ public class AdminController {
             Admin loginAdmin = adminService.adminLogin(admin);
             if(loginAdmin!=null){
                 //登录成功
+                log.info("登录成功了");
                 session.setAttribute("loginAdmin",loginAdmin);
                 return "/admin/index";
             }else{
