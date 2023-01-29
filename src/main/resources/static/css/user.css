@@ -281,13 +281,13 @@
 marquee {
     padding:0px 5px;
     letter-spacing: 2px;
-    color: #ff1e77;
     padding-top: 2px;
     width: 200px;					/*这里可以设置滚动的宽度*/
     height: 200px;					/*这里可以设置滚动的高度*/
     border: thin solid darkgray;	/*这里可以设置边框的样式*/
     margin-top: 10px;
     margin-left: 0px;
+    line-height: 20px;
 }
 p {
     font-weight: bold;
