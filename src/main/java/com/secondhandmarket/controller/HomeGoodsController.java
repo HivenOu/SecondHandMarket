@@ -133,7 +133,7 @@ public class HomeGoodsController {
      */
     @GetMapping("/findNewGoodsByCatelogId/{catelog_id}")
     public String findNewGoodsByCatelogId(@PathVariable("catelog_id") Long catelog_id, Model model){
-        QueryWrapper<Goods> queryWrapper=new QueryWrapper<Goods>();
+        QueryWrapper<Goods> queryWrapper=new QueryWrapper<>();
         if(catelog_id!=8){
             queryWrapper.eq("catelog_id",catelog_id);
         }
@@ -141,15 +141,13 @@ public class HomeGoodsController {
         queryWrapper.eq("status",1);
         queryWrapper.orderByDesc("polish_time");
         List<Goods> goodsList = goodsService.list(queryWrapper);  //最近6个手机数码商品
+        List<Integer> goodsIds = goodsList.stream().map(Goods::getId).collect(Collectors.toList());
+        List<Image> images = iImageService.list(new QueryWrapper<Image>().in("goods_id", goodsIds));
+        Map<Integer, String> collect = images.stream().collect(Collectors.toMap(Image::getGoodsId, Image::getImgUrl, (k1, k2) -> k2));
 
         for (Goods goods : goodsList) {
-            List<Image> images = iImageService.list(new QueryWrapper<Image>().eq("goods_id", goods.getId()));
-            if(images.size()>0){
-                String imageUrl = images.get(0).getImgUrl();
-                goods.setImageUrl(imageUrl);
-            }
+            goods.setImageUrl(collect.get(goods.getId()));
         }
-
         model.addAttribute("goodsList",goodsList);
         model.addAttribute("catelog_id",catelog_id);
         return "/goods/catelogGoods"; //后台分类
@@ -171,12 +169,11 @@ public class HomeGoodsController {
             queryWrapper.like("name",keywords);
             queryWrapper.orderByDesc("polish_time");
             goodsList = goodsService.list(queryWrapper);
+            List<Integer> goodsIds = goodsList.stream().map(Goods::getId).collect(Collectors.toList());
+            List<Image> images = iImageService.list(new QueryWrapper<Image>().in("goods_id", goodsIds));
+            Map<Integer, String> collect = images.stream().collect(Collectors.toMap(Image::getGoodsId, Image::getImgUrl, (k1, k2) -> k2));
             for (Goods goods : goodsList) {
-                List<Image> images = iImageService.list(new QueryWrapper<Image>().eq("goods_id", goods.getId()));
-                if(images.size()>0){
-                    String imageUrl = images.get(0).getImgUrl();
-                    goods.setImageUrl(imageUrl);
-                }
+                goods.setImageUrl(collect.get(goods.getId()));
             }
         }
         model.addAttribute("goodsList",goodsList);
