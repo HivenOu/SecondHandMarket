@@ -16,7 +16,8 @@ import java.util.List;
 
 @Controller
 public class HomeGoodsController {
-
+    @Autowired
+    IImageService imageService;
 
     @Autowired
     IGoodsService goodsService;
@@ -345,6 +346,22 @@ public class HomeGoodsController {
             e.printStackTrace();
             return ResultCommon.fail(ResultCode.FAIL);
         }
+    }
+
+    /**
+     * 跳转举报页面
+     * @return
+     */
+    @GetMapping("/toInform/{goodsId}")
+    public String toPay(@PathVariable("goodsId") Integer goodsId, Model model){
+        Goods goods = goodsService.getById(goodsId);
+        List<Image> images = imageService.list(new QueryWrapper<Image>().eq("goods_id", goodsId));
+        if(images.size()>0){
+            String imageUrl = images.get(0).getImgUrl();
+            goods.setImageUrl(imageUrl);
+        }
+        model.addAttribute("goods",goods);
+        return "/user/informGoods";
     }
 
 }

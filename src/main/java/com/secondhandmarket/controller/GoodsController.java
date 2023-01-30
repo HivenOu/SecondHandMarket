@@ -4,7 +4,9 @@ package com.secondhandmarket.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.common.base.Strings;
 import com.secondhandmarket.pojo.Goods;
+import com.secondhandmarket.pojo.GoodsInforms;
 import com.secondhandmarket.pojo.User;
 import com.secondhandmarket.service.IGoodsService;
 import com.secondhandmarket.utils.PageUtil;
@@ -15,6 +17,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
+
+import javax.servlet.http.HttpSession;
+import java.util.Date;
 
 /**
  * <p>
@@ -62,6 +67,7 @@ public class GoodsController {
         model.addAttribute("id",id);//数据回显
         model.addAttribute("name",name);//数据回显
         model.addAttribute("status",status); //数据回显
+        //todo 设置这个商品被举报的次数
         return "/admin/goods/goods_list";
     }
 
@@ -111,5 +117,17 @@ public class GoodsController {
         return ResultCommon.success(ResultCode.SUCCESS);
     }
 
+    @PostMapping("/inform")
+    @ResponseBody
+    public ResultCommon informGoods(GoodsInforms informs, HttpSession session){
+        if (Strings.isNullOrEmpty(informs.getInformInformation())){
+            return ResultCommon.success(ResultCode.SUCCESS);
+        }
+        User loginUser = (User) session.getAttribute("loginUser");
+        informs.setUserId(loginUser.getId());
+        informs.setInformTime(new Date());
+        goodsService.informGoods(informs);
+        return ResultCommon.success(ResultCode.SUCCESS,informs.getGoodsId());
+    }
 
 }

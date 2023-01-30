@@ -68,6 +68,10 @@
         function  toPay(id) {
             window.location.href = '/orders/toPay/'+id
         }
+        /* 举报 */
+        function  toInform(id) {
+            window.location.href = '/toInform/'+id
+        }
 
     </script>
 
@@ -150,6 +154,7 @@
                     <input type="button" value="加入关注" class="blue lighten-1 waves-effect waves-light btn" id="btn_cart" th:onclick="|addFocus(${goods.id})|"></input>
                         <input th:if="${session.loginUser.id==seller.id}" type="button" value="在线支付" data-toggle="tooltip"  title="不可以购买自己的东西哦~" disabled="disabled" class="blue lighten-1 waves-effect waves-light btn" id="btn_buy"></input>
                         <input th:if="${session.loginUser.id!=seller.id}" type="button" value="在线支付"  class="blue lighten-1 waves-effect waves-light btn" id="btn_buy1" th:onclick="|toPay(${goods.id})|"></input>
+                        <input th:if="${session.loginUser.id!=seller.id}" type="button" value="举报此商品"  class="red lighten-1 waves-effect waves-light btn" id="btn_inform1" th:onclick="|toInform(${goods.id})|"></input>
                     </c:if>
                 </div>
             </div>

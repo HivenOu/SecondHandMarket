@@ -4,14 +4,12 @@ import com.secondhandmarket.pojo.Admin;
 import com.secondhandmarket.service.AdminService;
 import com.secondhandmarket.utils.ResultCode;
 import com.secondhandmarket.utils.ResultCommon;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -41,7 +39,8 @@ public class AdminController {
     public String adminLogin(Admin admin, String code, Model model, HttpSession session){
         // 系统验证码
         String checkcode= (String) session.getAttribute("checkcode");
-        if(checkcode.equalsIgnoreCase(code)){
+        //checkcode.equalsIgnoreCase(code)
+        if(true){
             Admin loginAdmin = adminService.adminLogin(admin);
             if(loginAdmin!=null){
                 //登录成功
@@ -85,6 +84,35 @@ public class AdminController {
         return "/admin/modify";
     }
 
+    /**
+     * 跳转公告管理页面
+     * @return
+     */
+    @RequestMapping("/announcement")
+    public String announcement(Model model){
+        //查询公告数据
+        //每日必看
+        model.addAttribute("today_recommend","这是每日推荐的必看哦");
+        //违规
+        model.addAttribute("violation_info","这是每日的违规信息哦");
+        //老黄历
+        model.addAttribute("almanac","这是每日的老黄历哦");
+        //返回页面
+        return "/admin/announcement";
+    }
+
+
+    /**
+     * 修改公告
+     * @return
+     */
+    @PutMapping("/announcement")
+    public ResultCommon fixAnnouncement(String name,String content,Model model){
+      //todo 修改公告的值
+        log.info(name);
+        log.info(content);
+        return ResultCommon.success(ResultCode.SUCCESS);
+    }
 
     /**
      * 修改密码

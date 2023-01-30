@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>公告管理</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript">
+        function  fixAnnouncement() {
+            $.ajax({
+                url:'/admin/announcement',
+                type:'PUT',
+                data:{"name":"todayRecommend","content": $("#my_describle").val()},
+                dataType:'json',
+                success:function(result){
+                    if(result.code==200){
+                        alert("修改成功");
+                        window.location.reload();
+                    }else{
+                        alert("服务器异常");
+                    }
+                },
+     /*           error:function(){
+                    alert('请求超时或系统出错!');
+                }*/
+            });
+        }
+    </script>
+</head>
+<link rel="stylesheet" href="/css/info_main.css"/>
+<link href="/css/mypage.css" rel="stylesheet">
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/css/bootstrap-responsive.min.css" />
+<link rel="stylesheet" href="/css/matrix-style.css" />
+<link rel="stylesheet" href="/css/matrix-media.css" />
+<body>
+<!--引入top和left-->
+<div th:replace="@{/admin/commons/main_top}::top"></div>
+<div th:replace="@{/admin/commons/main_left}::left"></div>
+<!--=============================================================================================================================================================================-->
+<!--main-container-part-->
+<div id="content" style="margin-right: 100px; margin-top: 40px;">
+    <!--breadcrumbs-->
+    <div id="content-header">
+        <div id="breadcrumb">
+            <a href="/admin/indexs" title="主页" class="tip-bottom">
+                <i class="icon-home"></i>主页</a> <a title="公告管理" class="tip-bottom">公告管理</a>
+        </div>
+    </div>
+
+  <div>
+            <table>
+                <tr>
+                    <td>
+                    <div>
+                        <div>
+                            <h2>每日必看:</h2>
+                            <div >
+					<textarea rows="6" cols="15" id="my_describle" value="xxxxx" name="todayRecommend" style="margin-top: 8px;width:365px"></textarea>
+                            </div>
+                        </div>
+                        <div >
+                            <button type="button" class="btn btn-primary" onclick="fixAnnouncement()">提交更改</button>
+                        </div>
+                    </div>
+                    </td>
+                    <td>
+                        <div>
+                            <div >
+                                <h2>违规信息:</h2>
+                                <div>
+					<textarea rows="6" cols="15" id="my_describle1" value="${violation_info}" name="violationInfo" style="margin-top: 8px;width:365px"></textarea>
+                                </div>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-primary" onclick="doSave1()">提交更改</button>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <div>
+                                <h2>每日黄历:</h2>
+                                <div>
+					<textarea rows="6" cols="15" id="my_describle2" value="${almanac}" name="almanac" style="margin-top: 8px;width:365px"></textarea>
+                                </div>
+                            </div>
+                            <div>
+                                <button type="button" class="btn btn-primary" onclick="doSave2()">提交更改</button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+
+            </table>
+      </div>
+
+        </div>
+        <!--End Inner-->
+
+<!--==================================================================================================================-->
+<div th:replace="@{/admin/commons/main_bottom}::bottom"></div>
+
+<!--End Page Wrapper-->
+</body>
+

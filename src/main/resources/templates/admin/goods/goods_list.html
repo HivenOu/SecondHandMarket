@@ -89,6 +89,7 @@
                 <th>类别</th>
                 <th>价格</th>
                 <th>创建时间</th>
+                <th>被举报次数</th>
                 <th>状态</th>
                 <th>操作</th>
             </tr>
@@ -109,6 +110,7 @@
                     </td>
                     <td th:text="|￥${goods.realPrice}|">XXX</td>
                     <td th:text="${goods.startTime}">XXX</td>
+                    <td th:text="${goods.informNum}">XXX</td>
                     <td>
                             <span th:if="${goods.status==1}" style="color:blue">在售</span>
                             <span th:if="${goods.status==0}" style="color:red">下架</span>
@@ -124,7 +126,7 @@
         <div style="text-align: right">
             <div class="pagination">
                 <ul>
-                    <li><a>总商品数:<span th:text="${pageUtil.totalCount}">XXXX</span>人</a></li>
+                    <li><a>总商品数:<span th:text="${pageUtil.totalCount}">XXXX</span>件</a></li>
                     <li><a>第<span th:text="${pageUtil.pageIndex}">XXXX</span>页</a></li>
 
                     <li><a th:if="${pageUtil.pageIndex>1}" th:href="|javascript:gopage(${pageUtil.pageIndex-1});|">上一页</a></li>
@@ -183,7 +185,7 @@
                     <div class="form-group">
                         <label class="col-sm-4 control-label" >描述:</label>
                         <div class="col-sm-8">
-					<textarea rows="3" cols="20" id="my_describle" name="describle" style="margin-top: 8px;width:365px">
+					<textarea rows="3" cols="20" id="my_describle4" name="describle" style="margin-top: 8px;width:365px">
 					</textarea>
                         </div>
                     </div>
@@ -251,7 +253,7 @@
                     <div class="form-group">
                         <label class="col-sm-4 control-label" >描述:</label>
                         <div class="col-sm-8">
-					<textarea rows="3" cols="20" id="my_describle" name="describle" readonly style="margin-top: 8px;width:365px">
+					<textarea rows="3" cols="20" id="my_describle3" name="describle" readonly style="margin-top: 8px;width:365px">
 					</textarea>
                         </div>
                     </div>

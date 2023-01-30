@@ -105,6 +105,20 @@ INSERT INTO `orders` VALUES (1,11,78,85970353,10,3,'买给爸爸用的','2018-04
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
 UNLOCK TABLES;
 
+DROP TABLE IF EXISTS `goods_informs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+SET character_set_client = utf8mb4 ;
+CREATE TABLE `goods_informs` (
+                          `id` int NOT NULL AUTO_INCREMENT COMMENT '举报表id',
+                          `user_id` int NOT NULL COMMENT '举报用户id',
+                          `goods_id` int NOT NULL COMMENT '商品id',
+                          `inform_no` bigint DEFAULT NULL COMMENT '举报编号',
+                          `inform_information` text COMMENT '举报内容',
+                          `inform_time` datetime DEFAULT NULL COMMENT '举报时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
 --
 -- Table structure for table `reply`
 --
@@ -179,6 +193,7 @@ CREATE TABLE `goods` (
   `describle` text COMMENT '详细信息',
   `status` int DEFAULT '1' COMMENT '状态 上架1 下架0',
   `isdel` tinyint NOT NULL DEFAULT '0' COMMENT '是否删除',
+  `inform_num` int DEFAULT '0' COMMENT '被举报次数',
   PRIMARY KEY (`id`),
   KEY `catelog_id` (`catelog_id`) USING BTREE,
   KEY `user_id` (`user_id`) USING BTREE

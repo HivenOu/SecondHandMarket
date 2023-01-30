@@ -3,10 +3,11 @@ package com.secondhandmarket.pojo;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import lombok.Getter;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -16,6 +17,7 @@ import java.io.Serializable;
  * @author bruce
  * @since 2021-11-04
  */
+@TableName("goods_informs")
 @Data
 public class GoodsInforms implements Serializable {
 
@@ -28,12 +30,10 @@ public class GoodsInforms implements Serializable {
     private Integer id;
 
     /**
-     * 用户id
+     * 举报用户id
      */
     private Integer userId;
 
-
-    private Integer sellerId;
 
     /**
      * 商品id
@@ -43,10 +43,13 @@ public class GoodsInforms implements Serializable {
     /**
      * 举报编号
      */
-    private Long InformNum;
+    private Long informNo;
 
 
-    private String InformInformation;
+    private String informInformation;
+
+    //举报时间
+    private Date informTime;
 
 
     @TableField(exist = false)
