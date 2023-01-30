@@ -43,6 +43,7 @@ public class HomeGoodsController {
      */
     @RequestMapping("/")
     public String findNewGoods(Model model){
+        //fixme 优化数据库查询 在内存中做计算
         QueryWrapper<Goods> queryWrapper=new QueryWrapper<Goods>();
         queryWrapper.eq("isdel",0);
         queryWrapper.eq("status",1);
@@ -106,7 +107,7 @@ public class HomeGoodsController {
         queryWrapper7.eq("catelog_id",7);
         queryWrapper7.last("limit 0,6");
         List<Goods> goodsList7 = goodsService.list(queryWrapper7);  //最近6个生活百货商品
-
+        //fixme 在内存中做计算
         for (Goods goods : goodsList0) {
             List<Image> images = iImageService.list(new QueryWrapper<Image>().eq("goods_id", goods.getId()));
             if(images.size()>0){
@@ -180,7 +181,7 @@ public class HomeGoodsController {
             }
         }
         model.addAttribute("goodsList7",goodsList7);
-        //设置公告栏信息
+        //todo 设置公告栏信息
         //每日推荐
         model.addAttribute("today_recommend","1、官方的丧失对嘎达是十多个的撒个啥\\n2、是干啥的感觉扣水电费开机的时候高科技十多个\n3、是的嘎洒见到过客户反馈到撒后方可搭嘎开始哭丧和速度快");
         //违规信息
