@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>确认订单</title>
+    <title>举报商品</title>
     <link rel="icon" href="/img/logo.jpg" type="image/x-icon" />
     <link rel="stylesheet" href="/css/font-awesome.min.css" />
     <link rel="stylesheet" href="/css/userhome.css" />
@@ -57,7 +57,7 @@
                 <div class="share_content">
                     <div class="story">
                         <form class="form-horizontal" role="form" id="orderForm">
-                            <h4 >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;订单编号：
+                            <h4 >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;编号：
                                 <input name="orderNum" class="order-num" type="text" style="border:0px;background:rgba(0, 0, 0, 0);" value=""/>
                                 <input name="goodsId" type="hidden" th:value="${goods.id}"/> </h4>
                             <div class="form-group">
@@ -73,16 +73,16 @@
                                 <div class="col-sm-10">
                                     <input name="orderPrice" readonly="true" type="text" class="form-control" style="border:0px;background:rgba(0, 0, 0, 0); " th:value="${goods.price}">
                                 </div>
-                                <label  class="col-sm-2 control-label" >备注：</label>
+                                <label  class="col-sm-2 control-label" >为何举报？：</label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control"
-                                           placeholder="请输入备注（收获人信息 地址 联系方式等）" value="" name="orderInformation">
+                                           placeholder="请输入举报理由" value="" name="orderInformation">
                                 </div>
                             </div>
                             <hr />
                             <div class="form-group">
                                 <div class="col-sm-offset-4 col-sm-8">
-                                    <a th:href="|/goodsDetails/${goods.id}|" class="btn btn-danger">取消支付</a>
+                                    <a th:href="|/goodsDetails/${goods.id}|" class="btn btn-danger">取消</a>
                                     <button th:if="${session.purse.balance>=goods.price}" type="button" onclick="addOrders();" class="btn btn-info">立即支付</button>
                                     <button th:if="${session.purse.balance<goods.price}" type="button" onclick="location.href='/purse/toPurse';" class="btn btn-danger">余额不足，请充值！</button>
                                 </div>
