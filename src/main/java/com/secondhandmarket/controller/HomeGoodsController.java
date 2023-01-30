@@ -11,8 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 public class HomeGoodsController {
@@ -43,145 +43,78 @@ public class HomeGoodsController {
      */
     @RequestMapping("/")
     public String findNewGoods(Model model){
-        //fixme 优化数据库查询 在内存中做计算
-        QueryWrapper<Goods> queryWrapper=new QueryWrapper<Goods>();
-        queryWrapper.eq("isdel",0);
-        queryWrapper.eq("status",1);
-        queryWrapper.orderByDesc("polish_time");
-        queryWrapper.last("limit 0,6");
-        List<Goods> goodsList0 = goodsService.list(queryWrapper);  //最近6个商品
+        //fixme 适合商品少的项目
+        QueryWrapper<Goods> allQueryWrapper=new QueryWrapper<Goods>();
+        allQueryWrapper.eq("isdel",0);
+        allQueryWrapper.eq("status",1);
+        List<Goods> allGoods = goodsService.list(allQueryWrapper);
+        //在内存中排序、切分
+        //获取最新发布的商品
+        List<Goods> goodsList0=allGoods.stream().sorted(Comparator.comparing(Goods::getPolishTime).reversed()).limit(6).collect(Collectors.toList());
+        //按照catelog_id分组
+        Map<Integer, List<Goods>> map = allGoods.stream().collect(Collectors.groupingBy(Goods::getCatelogId));
+        //分组以后的在按照发布时间排序
+        List<Goods> goodsList1 = map.get(1).stream().sorted(Comparator.comparing(Goods::getPolishTime).reversed()).limit(6).collect(Collectors.toList());
+        List<Goods> goodsList2 = map.get(2).stream().sorted(Comparator.comparing(Goods::getPolishTime).reversed()).limit(6).collect(Collectors.toList());
+        List<Goods> goodsList3 = map.get(3).stream().sorted(Comparator.comparing(Goods::getPolishTime).reversed()).limit(6).collect(Collectors.toList());
+        List<Goods> goodsList4 = map.get(4).stream().sorted(Comparator.comparing(Goods::getPolishTime).reversed()).limit(6).collect(Collectors.toList());
+        List<Goods> goodsList5 = map.get(5).stream().sorted(Comparator.comparing(Goods::getPolishTime).reversed()).limit(6).collect(Collectors.toList());
+        List<Goods> goodsList6 = map.get(6).stream().sorted(Comparator.comparing(Goods::getPolishTime).reversed()).limit(6).collect(Collectors.toList());
+        List<Goods> goodsList7 = map.get(7).stream().sorted(Comparator.comparing(Goods::getPolishTime).reversed()).limit(6).collect(Collectors.toList());
 
-        QueryWrapper<Goods> queryWrapper1=new QueryWrapper<Goods>();
-        queryWrapper1.eq("isdel",0);
-        queryWrapper1.eq("status",1);
-        queryWrapper1.orderByDesc("polish_time");
-        queryWrapper1.eq("catelog_id",1);
-        queryWrapper1.last("limit 0,6");
-        List<Goods> goodsList1 = goodsService.list(queryWrapper1);  //最近6个手机数码商品
+        //在内存中做计算
+        List<Integer> allGoodsId = goodsList0.stream().map(Goods::getId).collect(Collectors.toList());
+        allGoodsId.addAll(goodsList1.stream().map(Goods::getId).collect(Collectors.toList()));
+        allGoodsId.addAll(goodsList2.stream().map(Goods::getId).collect(Collectors.toList()));
+        allGoodsId.addAll(goodsList3.stream().map(Goods::getId).collect(Collectors.toList()));
+        allGoodsId.addAll(goodsList4.stream().map(Goods::getId).collect(Collectors.toList()));
+        allGoodsId.addAll(goodsList5.stream().map(Goods::getId).collect(Collectors.toList()));
+        allGoodsId.addAll(goodsList6.stream().map(Goods::getId).collect(Collectors.toList()));
+        allGoodsId.addAll(goodsList7.stream().map(Goods::getId).collect(Collectors.toList()));
+        List<Image> goods_id = iImageService.list(new QueryWrapper<Image>().in("goods_id", allGoodsId));
 
+        HashMap<Integer, String> collect = goods_id.stream().collect(Collectors.toMap(Image::getGoodsId, Image::getImgUrl, (k1, k2) -> k2, HashMap::new));
 
-        QueryWrapper<Goods> queryWrapper2=new QueryWrapper<Goods>();
-        queryWrapper2.eq("isdel",0);
-        queryWrapper2.eq("status",1);
-        queryWrapper2.orderByDesc("polish_time");
-        queryWrapper2.eq("catelog_id",2);
-        queryWrapper2.last("limit 0,6");
-        List<Goods> goodsList2 = goodsService.list(queryWrapper2);  //最近6个运动户外商品
-
-        QueryWrapper<Goods> queryWrapper3=new QueryWrapper<Goods>();
-        queryWrapper3.eq("isdel",0);
-        queryWrapper3.eq("status",1);
-        queryWrapper3.orderByDesc("polish_time");
-        queryWrapper3.eq("catelog_id",3);
-        queryWrapper3.last("limit 0,6");
-        List<Goods> goodsList3 = goodsService.list(queryWrapper3);  //最近6个日用电器商品
-
-        QueryWrapper<Goods> queryWrapper4=new QueryWrapper<Goods>();
-        queryWrapper4.eq("isdel",0);
-        queryWrapper4.eq("status",1);
-        queryWrapper4.orderByDesc("polish_time");
-        queryWrapper4.eq("catelog_id",4);
-        queryWrapper4.last("limit 0,6");
-        List<Goods> goodsList4 = goodsService.list(queryWrapper4);  //最近6个图书教材商品
-
-        QueryWrapper<Goods> queryWrapper5=new QueryWrapper<Goods>();
-        queryWrapper5.eq("isdel",0);
-        queryWrapper5.eq("status",1);
-        queryWrapper5.orderByDesc("polish_time");
-        queryWrapper5.eq("catelog_id",5);
-        queryWrapper5.last("limit 0,6");
-        List<Goods> goodsList5 = goodsService.list(queryWrapper5);  //最近6个服饰美妆商品
-
-        QueryWrapper<Goods> queryWrapper6=new QueryWrapper<Goods>();
-        queryWrapper6.eq("isdel",0);
-        queryWrapper6.eq("status",1);
-        queryWrapper6.orderByDesc("polish_time");
-        queryWrapper6.eq("catelog_id",6);
-        queryWrapper6.last("limit 0,6");
-        List<Goods> goodsList6 = goodsService.list(queryWrapper6);  //最近6个体育器材商品
-
-        QueryWrapper<Goods> queryWrapper7=new QueryWrapper<Goods>();
-        queryWrapper7.eq("isdel",0);
-        queryWrapper7.eq("status",1);
-        queryWrapper7.orderByDesc("polish_time");
-        queryWrapper7.eq("catelog_id",7);
-        queryWrapper7.last("limit 0,6");
-        List<Goods> goodsList7 = goodsService.list(queryWrapper7);  //最近6个生活百货商品
-        //fixme 在内存中做计算
         for (Goods goods : goodsList0) {
-            List<Image> images = iImageService.list(new QueryWrapper<Image>().eq("goods_id", goods.getId()));
-            if(images.size()>0){
-                String imageUrl = images.get(0).getImgUrl();
-                goods.setImageUrl(imageUrl);
-            }
+            goods.setImageUrl(collect.get(goods.getId()));
         }
         model.addAttribute("goodsList0",goodsList0);
 
-
         for (Goods goods : goodsList1) {
-            List<Image> images = iImageService.list(new QueryWrapper<Image>().eq("goods_id", goods.getId()));
-            if(images.size()>0){
-                String imageUrl = images.get(0).getImgUrl();
-                goods.setImageUrl(imageUrl);
-            }
+            goods.setImageUrl(collect.get(goods.getId()));
         }
         model.addAttribute("goodsList1",goodsList1);
 
-
         for (Goods goods : goodsList2) {
-            List<Image> images = iImageService.list(new QueryWrapper<Image>().eq("goods_id", goods.getId()));
-            if(images.size()>0){
-                String imageUrl = images.get(0).getImgUrl();
-                goods.setImageUrl(imageUrl);
-            }
+            goods.setImageUrl(collect.get(goods.getId()));
         }
         model.addAttribute("goodsList2",goodsList2);
 
         for (Goods goods : goodsList3) {
-            List<Image> images = iImageService.list(new QueryWrapper<Image>().eq("goods_id", goods.getId()));
-            if(images.size()>0){
-                String imageUrl = images.get(0).getImgUrl();
-                goods.setImageUrl(imageUrl);
-            }
+            goods.setImageUrl(collect.get(goods.getId()));
         }
         model.addAttribute("goodsList3",goodsList3);
 
         for (Goods goods : goodsList4) {
-            List<Image> images = iImageService.list(new QueryWrapper<Image>().eq("goods_id", goods.getId()));
-            if(images.size()>0){
-                String imageUrl = images.get(0).getImgUrl();
-                goods.setImageUrl(imageUrl);
-            }
+            goods.setImageUrl(collect.get(goods.getId()));
         }
         model.addAttribute("goodsList4",goodsList4);
 
         for (Goods goods : goodsList5) {
-            List<Image> images = iImageService.list(new QueryWrapper<Image>().eq("goods_id", goods.getId()));
-            if(images.size()>0){
-                String imageUrl = images.get(0).getImgUrl();
-                goods.setImageUrl(imageUrl);
-            }
+            goods.setImageUrl(collect.get(goods.getId()));
         }
         model.addAttribute("goodsList5",goodsList5);
 
         for (Goods goods : goodsList6) {
-            List<Image> images = iImageService.list(new QueryWrapper<Image>().eq("goods_id", goods.getId()));
-            if(images.size()>0){
-                String imageUrl = images.get(0).getImgUrl();
-                goods.setImageUrl(imageUrl);
-            }
+            goods.setImageUrl(collect.get(goods.getId()));
         }
         model.addAttribute("goodsList6",goodsList6);
 
         for (Goods goods : goodsList7) {
-            List<Image> images = iImageService.list(new QueryWrapper<Image>().eq("goods_id", goods.getId()));
-            if(images.size()>0){
-                String imageUrl = images.get(0).getImgUrl();
-                goods.setImageUrl(imageUrl);
-            }
+            goods.setImageUrl(collect.get(goods.getId()));
         }
         model.addAttribute("goodsList7",goodsList7);
-        //todo 设置公告栏信息
+        //todo 查询公告栏信息
         //每日推荐
         model.addAttribute("today_recommend","1、官方的丧失对嘎达是十多个的撒个啥\\n2、是干啥的感觉扣水电费开机的时候高科技十多个\n3、是的嘎洒见到过客户反馈到撒后方可搭嘎开始哭丧和速度快");
         //违规信息
