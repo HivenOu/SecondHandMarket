@@ -11,7 +11,7 @@
                 type:'PUT',
                 data:{"name":"todayRecommend","content": $("#my_describle").val()},
                 dataType:'json',
-                success:function(result){
+                success: function(result){
                     if(result.code==200){
                         alert("修改成功");
                         window.location.reload();
@@ -19,9 +19,47 @@
                         alert("服务器异常");
                     }
                 },
-     /*           error:function(){
-                    alert('请求超时或系统出错!');
-                }*/
+                error: function (e) {
+                    console.log(e)
+                }
+            });
+        }
+        function  fixAnnouncement1() {
+            $.ajax({
+                url:'/admin/announcement',
+                type:'PUT',
+                data:{"name":"violationInfo","content": $("#my_describle1").val()},
+                dataType:'json',
+                success: function(result){
+                    if(result.code==200){
+                        alert("修改成功");
+                        window.location.reload();
+                    }else{
+                        alert("服务器异常");
+                    }
+                },
+                error: function (e) {
+                    console.log(e)
+                }
+            });
+        }
+        function  fixAnnouncement2() {
+            $.ajax({
+                url:'/admin/announcement',
+                type:'PUT',
+                data:{"name":"almanac","content": $("#my_describle2").val()},
+                dataType:'json',
+                success: function(result){
+                    if(result.code==200){
+                        alert("修改成功");
+                        window.location.reload();
+                    }else{
+                        alert("服务器异常");
+                    }
+                },
+                error: function (e) {
+                    console.log(e)
+                }
             });
         }
     </script>
@@ -57,7 +95,7 @@
                         <div>
                             <h2>每日必看:</h2>
                             <div >
-					<textarea rows="6" cols="15" id="my_describle" value="xxxxx" name="todayRecommend" style="margin-top: 8px;width:365px"></textarea>
+					<textarea rows="6" cols="15" id="my_describle" th:text="${today_recommend}" value="xxxxx" name="todayRecommend" style="margin-top: 8px;width:365px"></textarea>
                             </div>
                         </div>
                         <div >
@@ -70,11 +108,11 @@
                             <div >
                                 <h2>违规信息:</h2>
                                 <div>
-					<textarea rows="6" cols="15" id="my_describle1" value="${violation_info}" name="violationInfo" style="margin-top: 8px;width:365px"></textarea>
+					<textarea rows="6" cols="15" id="my_describle1" th:text="${violation_info}" name="violationInfo" style="margin-top: 8px;width:365px"></textarea>
                                 </div>
                             </div>
                             <div>
-                                <button type="button" class="btn btn-primary" onclick="doSave1()">提交更改</button>
+                                <button type="button" class="btn btn-primary" onclick="fixAnnouncement1()">提交更改</button>
                             </div>
                         </div>
                     </td>
@@ -83,11 +121,11 @@
                             <div>
                                 <h2>每日黄历:</h2>
                                 <div>
-					<textarea rows="6" cols="15" id="my_describle2" value="${almanac}" name="almanac" style="margin-top: 8px;width:365px"></textarea>
+					<textarea rows="6" cols="15" id="my_describle2" th:text="${almanac}" name="almanac" style="margin-top: 8px;width:365px"></textarea>
                                 </div>
                             </div>
                             <div>
-                                <button type="button" class="btn btn-primary" onclick="doSave2()">提交更改</button>
+                                <button type="button" class="btn btn-primary" onclick="fixAnnouncement2()">提交更改</button>
                             </div>
                         </div>
                     </td>

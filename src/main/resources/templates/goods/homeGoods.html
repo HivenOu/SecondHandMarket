@@ -148,7 +148,7 @@
                            <h2 style="font-weight:700;align-content: center;">违规信息</h2>
                            <hr class="hr2">
                            <marquee style="color: #ff0000" direction="up" scrollamount="1" valign="center">
-                               <p th:text="${today_recommend}"></p>
+                               <p th:text="${violation_info}"></p>
                            </marquee>
                        </div>
                    </td>
@@ -157,21 +157,12 @@
                            <h2 style="font-weight:700;align-content: center;">每日黄历</h2>
                            <hr class="hr2">
                            <marquee style="color: #FFA07A" direction="up" scrollamount="1" valign="center">
-                               <p th:text="${today_recommend}"></p>
+                               <p th:text="${almanac}"></p>
                            </marquee>
                        </div>
                    </td>
                </tr>
            </table>
-         <!--   <div style="margin:5px 10px 20px 30px;width: 230px;height: 230px">
-            <h2>今日必看</h2>
-            <hr class="hr2">
-            <marquee direction="up" scrollamount="1" valign="center">
-                &lt;!&ndash;direction可以设置滚动的方向，分别为up，down，left，right。&#45;&#45;scrollamount设置滚动的速度，值越大速度越快&ndash;&gt;
-                <p th:text="${today_recommend}"></p>
-            </marquee>
-            </div>-->
-
         </div>
     </div>
     <!--

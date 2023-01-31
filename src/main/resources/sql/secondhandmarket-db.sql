@@ -353,3 +353,12 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2023-01-29 12:33:14
+
+DROP TABLE IF EXISTS `announcement`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+SET character_set_client = utf8mb4 ;
+CREATE TABLE `announcement` (
+                                 `today_recommend` text COMMENT '今日必看',
+                                 `violation_info` text COMMENT '违规信息',
+                                 `almanac` text COMMENT '每日黄历',
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

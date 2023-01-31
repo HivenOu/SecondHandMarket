@@ -1,6 +1,7 @@
 package com.secondhandmarket.controller;
 
 import com.secondhandmarket.pojo.Admin;
+import com.secondhandmarket.pojo.Announcement;
 import com.secondhandmarket.service.AdminService;
 import com.secondhandmarket.utils.ResultCode;
 import com.secondhandmarket.utils.ResultCommon;
@@ -90,12 +91,13 @@ public class AdminController {
     @RequestMapping("/announcement")
     public String announcement(Model model){
         //查询公告数据
+        Announcement announcement = adminService.getAnnouncement();
         //每日必看
-        model.addAttribute("today_recommend","这是每日推荐的必看哦");
+        model.addAttribute("today_recommend",announcement.getTodayRecommend());
         //违规
-        model.addAttribute("violation_info","这是每日的违规信息哦");
+        model.addAttribute("violation_info",announcement.getViolationInfo());
         //老黄历
-        model.addAttribute("almanac","这是每日的老黄历哦");
+        model.addAttribute("almanac",announcement.getAlmanac());
         //返回页面
         return "/admin/announcement";
     }
@@ -107,9 +109,8 @@ public class AdminController {
      */
     @PutMapping("/announcement")
     public ResultCommon fixAnnouncement(String name,String content,Model model){
-      //todo 修改公告的值
-        log.info(name);
-        log.info(content);
+      //修改公告的值
+        adminService.updateAnnouncement(name,content);
         return ResultCommon.success(ResultCode.SUCCESS);
     }
 

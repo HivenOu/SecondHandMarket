@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -37,6 +38,8 @@ public class HomeGoodsController {
     @Autowired
     ICommentsService commentsService;
 
+    @Resource
+    private AdminService adminService;
     /**
      * 01-前台首页
      * @return
@@ -115,12 +118,13 @@ public class HomeGoodsController {
         }
         model.addAttribute("goodsList7",goodsList7);
         //todo 查询公告栏信息
+        Announcement announcement = adminService.getAnnouncement();
         //每日推荐
-        model.addAttribute("today_recommend","1、官方的丧失对嘎达是十多个的撒个啥\\n2、是干啥的感觉扣水电费开机的时候高科技十多个\n3、是的嘎洒见到过客户反馈到撒后方可搭嘎开始哭丧和速度快");
+        model.addAttribute("today_recommend",announcement.getTodayRecommend());
         //违规信息
-        model.addAttribute("violation_info","Codersyn, 一个热爱分享的博客阿范德萨孤独颂歌发打发的撒嘎嘎萨芬的撒大多数嘎达事发地是开工卡的江苏高考劳烦的开关和喀什欢哥");
+        model.addAttribute("violation_info",announcement.getViolationInfo());
         //老黄历
-        model.addAttribute("almanac","Codersyn, 一个热爱分享的博客阿范德萨孤独颂歌发打发的撒嘎嘎萨芬的撒大多数嘎达事发地是开工卡的江苏高考劳烦的开关和喀什欢哥");
+        model.addAttribute("almanac",announcement.getAlmanac());
         return "/goods/homeGoods"; //后台首页
     }
 
