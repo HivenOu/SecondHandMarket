@@ -7,7 +7,7 @@
     <groupId>com.secondhandmarket</groupId>
     <artifactId>SecondHandMarket</artifactId>
     <version>1.0-SNAPSHOT</version>
-
+    <packaging>jar</packaging>
     <!--导入SpringBoot他爹：需要继承一个父工程  管理依赖 不是导入依赖 以后导入依赖的时候不用写版本，因为父工程已经管理好了版本-->
     <parent>
         <groupId>org.springframework.boot</groupId>
