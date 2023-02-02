@@ -111,7 +111,7 @@
                     <td th:text="|￥${goods.realPrice}|">XXX</td>
                     <td th:text="${goods.startTime}">XXX</td>
                     <td >
-                        <button type="button" class="btn btn-primary btn-sm" th:text="${goods.informNum}" th:onclick="|checkInform(${goods.id})|">XXXX</button>
+                        <button type="button" class="btn btn-primary btn-sm" th:text="${goods.informNum}" th:onclick="|checkInform(${goods.id},${goods.status})|">XXXX</button>
                     </td>>
                     <td>
                             <span th:if="${goods.status==1}" style="color:blue">在售</span>
@@ -283,7 +283,9 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title" id="myInformLabel" >举报信息</h4>
             </div>
-            <div class="modal-body" style="height:0 auto; ">
+            <div class="modal-body" id="informDiv" style="height:0 auto; ">
+                <input type="hidden" id="goodsId" value=""/>
+                <input type="hidden" id="goodsStatus" value=""/>
                 <!--表格显示-->
                 <table class="table table-bordered">
                     <thead>
@@ -302,8 +304,8 @@
                 </table>
             </div>
 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default red" data-dismiss="modal">下架此商品</button>
+            <div class="modal-footer" id="informDown">
+                <button type="button" class="red btn btn-default" id="outGoodsBtn" onclick="updateStatus()" ></button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
             </div>
         </div><!-- /.modal-content -->
@@ -329,9 +331,19 @@
         autoclose: true
     });
     /* 查看举报内容 */
-    function checkInform(id){
+    function checkInform(id,status){
+        console.log(status);
+        if(status==1){
+            $('#informDown').find("button[id='outGoodsBtn']").html("下架此商品");
+            //$('#outGoodsBtn').val("下架此商品11");
+        }else {
+            $('#informDown').find("button[id='outGoodsBtn']").html("上架此商品");
+        }
         //清空原来的数据
         $('#informTbody').empty();
+
+        $('#goodsId').val(id);
+        $('#goodsStatus').val(status);
         //todo 发送请求获取举报信息
         console.log(id)
         //动态的添加tr
@@ -363,6 +375,28 @@
         tbody.appendChild(tr);
 
         $('#InformTable').modal('toggle');
+    }
+
+    function updateStatus(){
+        var id = document.getElementById('goodsId').value;
+        console.log(id)
+        var status = document.getElementById('goodsStatus').value;
+        console.log(status)
+        $.ajax({
+            url:'/goods/updateStatus?goodsId='+id+'&status='+status,
+            type:'PATCH',
+            dataType:'json',
+            success:function(result){
+                if(result.code==200) {
+                    $('#InformTable').modal('hide');
+                }else{
+                    alert("服务器异常");
+                }
+            },
+            error:function(){
+                alert('请求超时或系统出错!');
+            }
+        });
     }
 
     /* 查看 */

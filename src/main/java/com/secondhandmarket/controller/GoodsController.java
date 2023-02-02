@@ -12,6 +12,7 @@ import com.secondhandmarket.service.IGoodsService;
 import com.secondhandmarket.utils.PageUtil;
 import com.secondhandmarket.utils.ResultCode;
 import com.secondhandmarket.utils.ResultCommon;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,7 @@ import java.util.Date;
  */
 @Controller
 @RequestMapping("/goods")
+@Slf4j
 public class GoodsController {
 
     @Autowired
@@ -101,6 +103,19 @@ public class GoodsController {
         }
     }
 
+    /**
+     * 商品上下架
+     * @param
+     * @return
+     */
+    @PatchMapping("/updateStatus")
+    @ResponseBody
+    public ResultCommon updateStatus(@RequestParam String goodsId,@RequestParam Integer status){
+        log.info(goodsId);
+        log.info(status.toString());
+        log.info("请求过来了");
+        return ResultCommon.success(ResultCode.SUCCESS);
+    }
 
     @PostMapping("/deleteGoods")
     @ResponseBody
