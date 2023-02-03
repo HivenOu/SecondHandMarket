@@ -2,14 +2,14 @@ package com.secondhandmarket.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.secondhandmarket.mapper.GoodsInformsMapper;
-import com.secondhandmarket.pojo.Goods;
 import com.secondhandmarket.mapper.GoodsMapper;
+import com.secondhandmarket.pojo.Goods;
 import com.secondhandmarket.pojo.GoodsInforms;
 import com.secondhandmarket.pojo.Image;
 import com.secondhandmarket.pojo.User;
 import com.secondhandmarket.service.IGoodsService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.secondhandmarket.service.IImageService;
 import com.secondhandmarket.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * <p>
@@ -75,10 +76,20 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods> implements
 
     @Transactional(rollbackFor = {Exception.class})
     @Override
-    public void informGoods(GoodsInforms informs) {
+    public void addInformGoods(GoodsInforms informs) {
         goodsInformsMapper.insert(informs);
         //在goods表中增加被举报次数的字段 此处更新字段
         Goods byId = getById(informs.getGoodsId());
         update(new UpdateWrapper<Goods>().set(true, "inform_num", byId.getInformNum() + 1).eq("id", byId.getId()));
+    }
+
+    @Override
+    public List<GoodsInforms> getInformGoods(Integer goodsId) {
+        return goodsInformsMapper.selectList(new QueryWrapper<GoodsInforms>().eq(true, "goods_id", goodsId));
+    }
+
+    @Override
+    public void updateStatus(Integer goodsId, Integer status) {
+        update(new UpdateWrapper<Goods>().set("status", status).eq("id", goodsId));
     }
 }

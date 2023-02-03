@@ -4,7 +4,8 @@ import com.secondhandmarket.pojo.Goods;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.secondhandmarket.pojo.GoodsInforms;
 import com.secondhandmarket.pojo.User;
-import com.secondhandmarket.utils.ResultCommon;
+
+import java.util.List;
 
 /**
  * <p>
@@ -22,6 +23,10 @@ public interface IGoodsService extends IService<Goods> {
 
     void updateGoods(Goods goods, String imgUrl);
 
-    void informGoods(GoodsInforms informs);
+    void addInformGoods(GoodsInforms informs);
+
+    List<GoodsInforms> getInformGoods(Integer goodsId);
+
+    void updateStatus(Integer goodsId, Integer status);
 
 }

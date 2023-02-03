@@ -107,8 +107,8 @@ public class AdminController {
      * 修改公告
      * @return
      */
-    @PutMapping("/announcement")
-    public ResultCommon fixAnnouncement(String name,String content,Model model){
+    @PutMapping(value = "/announcement")
+    public ResultCommon fixAnnouncement(String name,String content){
       //修改公告的值
         adminService.updateAnnouncement(name,content);
         return ResultCommon.success(ResultCode.SUCCESS);

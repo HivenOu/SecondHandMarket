@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -34,11 +35,20 @@ public class GoodsInforms implements Serializable {
      */
     private Integer userId;
 
+    /**
+     * 举报用户名
+     */
+    @TableField(exist = false)
+    private String userName;
+
 
     /**
      * 商品id
      */
     private Integer goodsId;
+
+    @TableField(exist = false)
+    private String goodsName;
 
     /**
      * 举报编号
@@ -49,10 +59,8 @@ public class GoodsInforms implements Serializable {
     private String informInformation;
 
     //举报时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date informTime;
 
-
-    @TableField(exist = false)
-    private Goods goods;
 
 }

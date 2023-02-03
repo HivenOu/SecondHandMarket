@@ -111,7 +111,8 @@
                     <td th:text="|￥${goods.realPrice}|">XXX</td>
                     <td th:text="${goods.startTime}">XXX</td>
                     <td >
-                        <button type="button" class="btn btn-primary btn-sm" th:text="${goods.informNum}" th:onclick="|checkInform(${goods.id},${goods.status})|">XXXX</button>
+                        <button th:if="${goods.informNum} > 0" type="button"  class="btn btn-primary btn-sm" th:text="${goods.informNum}" th:onclick="|checkInform(${goods.id},${goods.status})|">XXXX</button>
+                        <button th:if="${goods.informNum} <= 0" type="button" disabled="true" class="btn btn-primary btn-sm">0</button>
                     </td>>
                     <td>
                             <span th:if="${goods.status==1}" style="color:blue">在售</span>
@@ -332,56 +333,78 @@
     });
     /* 查看举报内容 */
     function checkInform(id,status){
-        console.log(status);
         if(status==1){
             $('#informDown').find("button[id='outGoodsBtn']").html("下架此商品");
+            document.getElementById("outGoodsBtn").style.backgroundColor='red';
             //$('#outGoodsBtn').val("下架此商品11");
         }else {
             $('#informDown').find("button[id='outGoodsBtn']").html("上架此商品");
+            document.getElementById("outGoodsBtn").style.backgroundColor='green';
         }
         //清空原来的数据
         $('#informTbody').empty();
 
         $('#goodsId').val(id);
         $('#goodsStatus').val(status);
-        //todo 发送请求获取举报信息
-        console.log(id)
-        //动态的添加tr
-        var tbody=document.getElementById('informTbody');
-        var tr=document.createElement('tr');
-        var td=document.createElement('td');
-        td.innerHTML="xx";
-        tr.appendChild(td);
+        //发送请求获取举报信息
+        $.ajax({
+            url:'/goods/inform?goodsId='+id,
+            type:'GET',
+            dataType:'json',
+            success:function(result){
+                if(result.code==200) {
+                    var json = result.data;
+                    if (json) {
+                        json.forEach((elem, index) => {
+                            //动态的添加tr
+                            var tbody=document.getElementById('informTbody');
+                            var tr=document.createElement('tr');
+                            var td=document.createElement('td');
+                            td.innerHTML=elem.id;
+                            tr.appendChild(td);
 
-        var td1=document.createElement('td');
-        td1.innerHTML="而阿道夫xx";
-        tr.appendChild(td1);
+                            var td1=document.createElement('td');
+                            td1.innerHTML=elem.userName;
+                            tr.appendChild(td1);
 
-        var td2=document.createElement('td');
-        td2.innerHTML="3554xx";
-        tr.appendChild(td2);
+                            var td2=document.createElement('td');
+                            td2.innerHTML=elem.goodsId;
+                            tr.appendChild(td2);
 
-        var td3=document.createElement('td');
-        td3.innerHTML="x3453x";
-        tr.appendChild(td3);
+                            var td3=document.createElement('td');
+                            td3.innerHTML=elem.goodsName;
+                            tr.appendChild(td3);
 
-        var td4=document.createElement('td');
-        td4.innerHTML="444xx";
-        tr.appendChild(td4);
+                            var td4=document.createElement('td');
+                            td4.innerHTML=elem.informInformation;
+                            tr.appendChild(td4);
 
-        var td5=document.createElement('td');
-        td5.innerHTML="x温热时x";
-        tr.appendChild(td5);
-        tbody.appendChild(tr);
-
-        $('#InformTable').modal('toggle');
+                            var td5=document.createElement('td');
+                            td5.innerHTML=elem.informTime;
+                            tr.appendChild(td5);
+                            tbody.appendChild(tr);
+                        });
+                        $('#InformTable').modal('toggle');
+                    }
+                }else{
+                    alert("服务器异常");
+                }
+            },
+            error:function(){
+                alert('请求超时或系统出错!');
+                $('#viewModal').modal('hide');
+            }
+        });
     }
 
     function updateStatus(){
         var id = document.getElementById('goodsId').value;
-        console.log(id)
         var status = document.getElementById('goodsStatus').value;
-        console.log(status)
+        if (status==1){
+            status=0;
+        }else {
+            status=1;
+        }
         $.ajax({
             url:'/goods/updateStatus?goodsId='+id+'&status='+status,
             type:'PATCH',
@@ -389,6 +412,7 @@
             success:function(result){
                 if(result.code==200) {
                     $('#InformTable').modal('hide');
+
                 }else{
                     alert("服务器异常");
                 }
