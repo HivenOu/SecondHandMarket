@@ -13,4 +13,4 @@ ENV LANG en_US.UTF-8
 ENV TZ  Asia/Shanghai
 WORKDIR /work
 
-CMD["java","-jar","app.jar"]
+CMD ["java","-jar","app.jar"]
