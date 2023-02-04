@@ -59,6 +59,11 @@ public class AdminController {
         }
     }
 
+    @GetMapping("index")
+    public String adminIndex(){
+        return "/admin/index";
+    }
+
     /**
      * 管理员退出
      * @return
