@@ -22,6 +22,20 @@
                         <label>手机</label>
                     </div>
                     <div class="input-field col s12">
+                        <input type="text" name="studentNo" required="required" pattern="^1[0-9]{10}$" class="validate ng-pristine ng-empty ng-invalid ng-invalid-required ng-valid-pattern ng-touched" />
+                        <label>学号</label>
+                    </div>
+                    <div  class="input-field col s12">
+                        <label>学院</label>
+                        <select id="college" name="college" class="select-box">
+                            <option>财管系</option>
+                            <option>信管系</option>
+                            <option>艺术系</option>
+                            <option>休体系</option>
+                            <option>外语系</option>
+                        </select>
+                    </div>
+                    <div class="input-field col s12">
                         <input type="password" name="password" required="required" class="validate ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" />
                         <label>密码</label>
                     </div>
