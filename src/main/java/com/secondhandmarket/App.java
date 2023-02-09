@@ -10,6 +10,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @MapperScan("com.secondhandmarket.mapper")
 public class App {
     public static void main(String[] args) {
-        SpringApplication.run(App.class, args);
+     /*   new SpringApplicationBuilder(App.class).listeners(new TestListener())
+                        .initializers(new TestInitializer()).run(args);*/
+        SpringApplication.run(App.class,args);
     }
 }
