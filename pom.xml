@@ -120,6 +120,9 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+                <excludes>
+                    <exclude>sql/</exclude>
+                </excludes>
             </resource>
         </resources>
 
