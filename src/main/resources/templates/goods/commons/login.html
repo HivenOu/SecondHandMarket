@@ -23,6 +23,14 @@
                         <!--  <a ng-click="showForget()" class="forget-btn">忘记密码？</a> -->
                     </div>
                     <div class="input-field col s12">
+                        <input type="text" name="role" required="required" list="roleNamelist" class="validate ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" />
+                        <datalist id="roleNamelist">
+                            <option>学生</option>
+                            <option>老师</option>
+                        </datalist>
+                        <label>角色</label>
+                    </div>
+                    <div class="input-field col s12" style="margin: 0 0 15px">
                         <em id="errorMsg" style="color: red"></em>
                     </div>
                     <button onclick="userLogin();" type="button" class="waves-effect waves-light btn login-btn red lighten-1">

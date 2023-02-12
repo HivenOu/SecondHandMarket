@@ -12,6 +12,7 @@ import com.secondhandmarket.service.IUserService;
 import com.secondhandmarket.utils.DateUtils;
 import com.secondhandmarket.utils.ResultCode;
 import com.secondhandmarket.utils.ResultCommon;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
+@Slf4j
 @Controller
 public class HomeUserController {
 
@@ -103,6 +105,7 @@ public class HomeUserController {
             userService.register(user);
             return ResultCommon.success(ResultCode.SUCCESS);
         } catch (Exception e) {
+            e.printStackTrace();
             return ResultCommon.fail(ResultCode.FAIL);
         }
     }

@@ -3,6 +3,8 @@ package com.secondhandmarket.pojo;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableField;
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
@@ -13,6 +15,7 @@ import java.io.Serializable;
  * @author bruce
  * @since 2021-10-29
  */
+@Data
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -34,6 +37,13 @@ public class User implements Serializable {
      * 密码
      */
     private String password;
+    /*角色
+    **/
+    private String role;
+    /*学生号*/
+    private String studentNo;
+    /*学院*/
+    private String college;
 
     /**
      * 即时通讯
@@ -71,98 +81,4 @@ public class User implements Serializable {
      */
     private Integer isdel;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-    public String getQq() {
-        return qq;
-    }
-
-    public void setQq(String qq) {
-        this.qq = qq;
-    }
-    public String getCreateAt() {
-        return createAt;
-    }
-
-    public void setCreateAt(String createAt) {
-        this.createAt = createAt;
-    }
-    public Integer getGoodsNum() {
-        return goodsNum;
-    }
-
-    public void setGoodsNum(Integer goodsNum) {
-        this.goodsNum = goodsNum;
-    }
-    public Integer getPower() {
-        return power;
-    }
-
-    public void setPower(Integer power) {
-        this.power = power;
-    }
-    public String getLastLogin() {
-        return lastLogin;
-    }
-
-    public void setLastLogin(String lastLogin) {
-        this.lastLogin = lastLogin;
-    }
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public Integer getIsdel() {
-        return isdel;
-    }
-
-    public void setIsdel(Integer isdel) {
-        this.isdel = isdel;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-            "id=" + id +
-            ", phone=" + phone +
-            ", username=" + username +
-            ", password=" + password +
-            ", qq=" + qq +
-            ", createAt=" + createAt +
-            ", goodsNum=" + goodsNum +
-            ", power=" + power +
-            ", lastLogin=" + lastLogin +
-            ", status=" + status +
-        "}";
-    }
 }
