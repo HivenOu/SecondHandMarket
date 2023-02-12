@@ -1,6 +1,7 @@
 package com.secondhandmarket.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.google.common.base.Strings;
 import com.secondhandmarket.pojo.Goods;
 import com.secondhandmarket.pojo.Image;
 import com.secondhandmarket.pojo.Purse;
@@ -52,6 +53,9 @@ public class HomeUserController {
     public ResultCommon login(User user, HttpSession session, HttpServletRequest request) {
         User loginUser = userService.getOne(new QueryWrapper<User>().eq("phone", user.getPhone()).eq("password", user.getPassword()).eq("isdel", 0));
         if (loginUser != null) {
+            if (Strings.isNullOrEmpty(user.getRole())){
+                return ResultCommon.fail(ResultCode.ROLE_NULL);
+            }
             if (loginUser.getStatus() == 0) {
                 session.setAttribute("loginUser", loginUser);
 

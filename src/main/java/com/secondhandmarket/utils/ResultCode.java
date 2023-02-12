@@ -11,7 +11,9 @@ public enum ResultCode {
     DONGJIE_PHONE_PASSWORD(502,"账户被冻结"),
     BAD_NEWPASSWORD(505,"新密码不能为空"),
     BAD_PASSWORD(504,"原密码输入错误"),
-    REPPET(503,"重复关注");
+    REPPET(503,"重复关注"),
+    ROLE_NULL(506,"角色信息为空"),
+    COLLEGE_NULL(507,"学院信息为空");
 
     private int code; //状态码
     private String msg;  //信息
