@@ -62,6 +62,9 @@
                     </div>
                 </li>
                 <li th:if="${session.loginUser==null}">
+                    <a href="/to-face-login">刷脸登录</a>
+                </li>
+                <li th:if="${session.loginUser==null}">
                     <a onclick="showLogin()">登录</a>
                 </li>
                 <li th:if="${session.loginUser==null}">

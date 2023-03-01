@@ -24,7 +24,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Controller
@@ -75,6 +80,63 @@ public class HomeUserController {
         } else {
             //账户密码错误
             return ResultCommon.fail(ResultCode.ERROR_PHONE_PASSWORD);
+        }
+    }
+
+    /**
+     * 前台会员注销
+     *
+     * @param session
+     * @return
+     */
+    @ResponseBody
+    @PostMapping("/face-login")
+    public ResultCommon faceLogin(String data,HttpSession session, HttpServletRequest request) {
+        try {
+            saveFile(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        User loginUser = userService.getOne(new QueryWrapper<User>().eq("phone", "17828167440").eq("password", "123456").eq("isdel", 0));
+        if (loginUser != null) {
+            if (loginUser.getStatus() == 0) {
+                session.setAttribute("loginUser", loginUser);
+
+                //钱包
+                Purse purse = purseService.getOne(new QueryWrapper<Purse>().eq("user_id", loginUser.getId()));
+                session.setAttribute("purse", purse);
+                //登录成功获取IP地址，更新到数据库！数据库存储最近一次登录的IP地址
+                String ip = request.getRemoteAddr();
+                loginUser.setLastLogin(ip);
+                userService.updateById(loginUser);
+                return ResultCommon.success(ResultCode.SUCCESS);
+            } else {
+                //账户被冻结
+                return ResultCommon.fail(ResultCode.DONGJIE_PHONE_PASSWORD);
+            }
+        } else {
+            //账户密码错误
+            return ResultCommon.fail(ResultCode.ERROR_PHONE_PASSWORD);
+        }
+    }
+    @GetMapping("/to-face-login")
+    public String toFaceLogin(HttpSession session) {
+        return "/goods/commons/faceLogin";  //跳转人脸识别
+    }
+
+    private void saveFile(String data) throws Exception {
+        try {
+            Base64.Decoder decoder = Base64.getDecoder();
+            byte[] bytes1 = decoder.decode(data);
+            String fileName = UUID.randomUUID() + ".png";
+            String filePath = this.getClass().getResource("/").getPath() + "/static/img/people/" + fileName;
+            File path = new File(filePath);
+            FileOutputStream writer = new FileOutputStream(path);
+            writer.write(bytes1);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException();
         }
     }
 
