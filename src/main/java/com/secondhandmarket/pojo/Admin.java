@@ -18,7 +18,7 @@ public class Admin {
     @TableId(value = "id",type= IdType.AUTO)
     private Integer id;
 
-    @TableField("username")
+    @TableField(value = "username")
     private String username;
 
     private String phone;

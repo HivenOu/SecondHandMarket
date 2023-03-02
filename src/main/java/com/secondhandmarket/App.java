@@ -13,5 +13,6 @@ public class App {
      /*   new SpringApplicationBuilder(App.class).listeners(new TestListener())
                         .initializers(new TestInitializer()).run(args);*/
         SpringApplication.run(App.class,args);
+
     }
 }
