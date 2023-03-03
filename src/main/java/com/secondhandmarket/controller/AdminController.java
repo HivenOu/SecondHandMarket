@@ -5,8 +5,8 @@ import com.secondhandmarket.pojo.Announcement;
 import com.secondhandmarket.service.AdminService;
 import com.secondhandmarket.utils.ResultCode;
 import com.secondhandmarket.utils.ResultCommon;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +16,10 @@ import javax.servlet.http.HttpSession;
 @Controller
 @RequestMapping("admin")
 @Slf4j
+@RequiredArgsConstructor
 public class AdminController {
 
-    @Autowired
-    AdminService adminService;
+    private final AdminService adminService;
 
     /**
      * 00-跳转到登录页面
