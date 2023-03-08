@@ -1,6 +1,7 @@
 package com.secondhandmarket.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -60,14 +61,25 @@ public class FaceRecognitionController {
             byte[] bytes = IoUtil.readBytes(file.getInputStream());
             //调用人脸检测的方法
             List<UserDto> faceInfo = AuthService.getFaceInfo(bytes);
+            Map<String, String> map = new HashMap<String,String>();
             //找到分数最高的那个用户信息
-            if (BeanUtil.isEmpty(faceInfo)){
-                throw new RuntimeException();
+            if (CollUtil.isEmpty(faceInfo)){
+                map.put("msg", "您还未录入人脸识别系统");
+                map.put("code", "500");
+                modelMap.put("success", true);
+                String strjson = objectMapper.writeValueAsString(map);
+                modelMap.put("strjson", strjson);
+                return modelMap;
             }
             UserDto userDto = faceInfo.stream().sorted(Comparator.comparing(UserDto::getScore).reversed()).findFirst().get();
             User one = userService.getOne(new LambdaQueryWrapper<User>().eq(User::getId, userDto.getUserId()));
             if(BeanUtil.isEmpty(one)){
-                throw new RuntimeException();
+                map.put("msg", "您账号异常，请联系管理员处理");
+                map.put("code", "500");
+                modelMap.put("success", true);
+                String strjson = objectMapper.writeValueAsString(map);
+                modelMap.put("strjson", strjson);
+                return modelMap;
             }
             session.setAttribute("loginUser", one);
             //钱包
@@ -77,7 +89,6 @@ public class FaceRecognitionController {
             String ip = request.getRemoteAddr();
             one.setLastLogin(ip);
             userService.updateById(one);
-            Map<String, String> map = new HashMap<String,String>();
             map.put("name", one.getUsername());
             map.put("qq", one.getQq());
             map.put("msg", "成功");

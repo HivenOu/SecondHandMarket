@@ -1,11 +1,13 @@
 package com.secondhandmarket.utils;
 
 
+import cn.hutool.core.bean.BeanUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.secondhandmarket.dto.UserDto;
 import com.secondhandmarket.dto.UserResp;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -16,14 +18,12 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 获取token类
  */
+@Slf4j
 public class AuthService {
 
     // api: https://aip.baidubce.com/rest/2.0/face/v3/search
@@ -112,7 +112,6 @@ public class AuthService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
-
         // 请求头
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json;charset=UTF-8");
@@ -121,7 +120,10 @@ public class AuthService {
         RestTemplate build = new RestTemplateBuilder().build();
         ResponseEntity<UserResp> userRespResponseEntity = build.postForEntity("https://aip.baidubce.com/rest/2.0/face/v3/search?access_token=" + getAuth(), request, UserResp.class);
         UserResp body = userRespResponseEntity.getBody();
-        System.out.println(body.getResult().getFaceToken());
+        log.info(body.toString());
+        if (BeanUtil.isEmpty(body.getResult())){
+            return Collections.EMPTY_LIST;
+        }
         return body.getResult().getUserDtoList();
     }
 

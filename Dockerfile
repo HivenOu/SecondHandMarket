@@ -1,5 +1,5 @@
 #FROM openjdk:8-alpine
-FROM java:8u111-alpine
+FROM circleci/jdk8:0.1.1
 
 #处理时间
 RUN apk update \
