@@ -1,4 +1,5 @@
-FROM openjdk:8-alpine
+#FROM openjdk:8-alpine
+FROM java:8u111-alpine
 
 #处理时间
 RUN apk update \

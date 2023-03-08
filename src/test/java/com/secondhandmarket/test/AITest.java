@@ -3,7 +3,7 @@ package com.secondhandmarket.test;
 import cn.hutool.core.io.IoUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.secondhandmarket.pojo.baidu.UserResp;
+import com.secondhandmarket.dto.UserResp;
 import com.secondhandmarket.utils.AuthService;
 import org.junit.Test;
 import org.springframework.boot.web.client.RestTemplateBuilder;

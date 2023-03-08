@@ -1,4 +1,4 @@
-package com.secondhandmarket.pojo.baidu;
+package com.secondhandmarket.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User{
+public class UserDto {
     @JsonProperty("group_id")
     private String groupId;
     @JsonProperty("user_id")
     private String userId;
     @JsonProperty("user_info")
     private String userInfo;
-    private double score;
+    private Double score;
 }

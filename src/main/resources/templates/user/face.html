@@ -31,11 +31,108 @@
 // 		$("#snap").click(function () {
 // 			context.drawImage(video, 0, 0, 330, 250);
 // 			})
-		//拍照每秒一次
-		setInterval(function(){
+		var TimerModule = (function(){
+			var timerHandle;
+
+			var startTimer = function(fnc, interval){
+				if(timerHandle){
+					//error, timer already running
+					return;
+				}
+				timerHandle = window.setInterval(fnc, interval);
+			};
+
+			var stopTimer = function(){
+				window.clearInterval(timerHandle);
+				timerHandle = null;
+			};
+
+			return {
+				start:startTimer,
+				stop:stopTimer
+			};
+
+		}());
+
+		var dataURItoBlob =function (base64Data){
+			var byteString;
+			if (base64Data.split(',')[0].indexOf('base64') >= 0)
+				byteString = atob(base64Data.split(',')[1]);
+			else
+				byteString = unescape(base64Data.split(',')[1]);
+			var mimeString = base64Data.split(',')[0].split(':')[1].split(';')[0];
+			var ia = new Uint8Array(byteString.length);
+			for (var i = 0; i < byteString.length; i++) {
+				ia[i] = byteString.charCodeAt(i);
+			}
+			return new Blob([ia], {type:mimeString});
+		}
+
+		var CatchCode = function (){
+			var canvans = document.getElementById("canvas");
+			//获取浏览器页面的画布对象
+			//以下开始编 数据
+			var imageBase64 = canvans.toDataURL();
+			var blob = dataURItoBlob(imageBase64);  // 上一步中的函数
+			var fd = new FormData(document.forms[0]);
+			fd.append("the_file", blob, 'image.png');
+			//将图像转换为base64数据
+			$.ajax({
+				type:"POST",
+				url:"/faceRecognition/save.do",
+				processData: false,     // 必须
+				contentType: false,     // 必须
+				data:fd,
+				datatype: "json",
+				success:function(data){
+					var mes = eval(data);
+					if (mes.success) {
+						var jsonObj = JSON.parse(mes.strjson);
+						var name = jsonObj.name;
+						var phone = jsonObj.phone;
+						var qq = jsonObj.qq;
+						var msg= jsonObj.msg;
+						var code= jsonObj.code
+						$("#msg").html(msg);
+						if ( code == '200'){
+							// TimerModule.start(function(){
+							// 	document.getElementById('time').innerText="将于"+latestSecond+"秒后跳转到首页";
+							// 	latestSecond -=1;
+							// }, 3000);
+							$('#msg').css('color','green');
+							$("#name").html(name);
+							$("#phone").html(phone);
+							$("#qq").html(qq);
+							TimerModule.stop();
+							var latestSecond=3
+							setTimeout(function(){
+								// 跳转到首页
+								window.location.href = "/"
+							},2000);
+						}else {
+							$('#msg').css('color','red');
+						}
+					}
+				},
+				error: function(){
+					//请求出错处理
+					alert("出情况了");
+				}
+			});
+		}
+
+		TimerModule.start(function(){
 			context.drawImage(video, 0, 0, 330, 250)
+			//调用后端识别图像
 			CatchCode();
-		},1000);
+		}, 2000);
+
+		// //拍照每秒一次
+		// setInterval(function(){
+		// 	context.drawImage(video, 0, 0, 330, 250)
+		// 	//调用后端识别图像
+		// 	CatchCode();
+		// },2000);
 		//navigator.getUserMedia这个写法在Opera中好像是navigator.getUserMedianow
 		//更新兼容火狐浏览器
 		if (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
@@ -47,82 +144,8 @@
 		}
 	
 	}, false);
-	
-	function dataURItoBlob(base64Data) {
-		var byteString;
-		if (base64Data.split(',')[0].indexOf('base64') >= 0)
-		byteString = atob(base64Data.split(',')[1]);
-		else
-		byteString = unescape(base64Data.split(',')[1]);
-		var mimeString = base64Data.split(',')[0].split(':')[1].split(';')[0];
-		var ia = new Uint8Array(byteString.length);
-		for (var i = 0; i < byteString.length; i++) {
-		ia[i] = byteString.charCodeAt(i);
-		}
-		return new Blob([ia], {type:mimeString});
-	}
-	
-	//上传服务器
-	function CatchCode() {
-		var canvans = document.getElementById("canvas");
-		//获取浏览器页面的画布对象
-		//以下开始编 数据
-		var imageBase64 = canvans.toDataURL();
-		var blob = dataURItoBlob(imageBase64);  // 上一步中的函数
-		var fd = new FormData(document.forms[0]);
-		fd.append("the_file", blob, 'image.png');
-		//将图像转换为base64数据
-		$.ajax({
-	   		type:"POST",
-	   		url:"/faceRecognition/save.do",
-	   		processData: false,     // 必须
-	      	contentType: false,     // 必须
-	      	data:fd,
-	    	datatype: "json",
-	   		success:function(data){
-		   		var mes = eval(data);
-		   		if (mes.success) {
-// 		   			alert(mes.strjson);
-		   			var jsonObj = JSON.parse(mes.strjson); 
-		   			var age = jsonObj.age;
-// 		   			alert(age);
-		   			var beauty = jsonObj.beauty;
-		   			var gendergender = jsonObj.gender;
-		   			var glasses = jsonObj.glasses;
-		   			var expression = jsonObj.expression
-		   			
-		   			$("#age").html(age);
-		   			$("#beauty").html(beauty);
-		   			
-		   			if(gendergender == 'male'){
-		   				$("#gendergender").html("男");
-		   			}else{
-		   				$("#gendergender").html("女");
-		   			}
-		   			
-		   			if(glasses == '0'){
-		   				$("#glasses").html("未戴眼镜");
-		   			}else if(glasses == '1'){
-		   				$("#glasses").html("戴了普通眼镜");
-		   			}else{
-		   				$("#glasses").html("戴了墨镜");
-		   			}
-					
-		   			if(expression == '0'){
-		   				$("#expression").html("不笑");
-		   			}else if(expression == '1'){
-		   				$("#expression").html("微笑");
-		   			}else{
-		   				$("#expression").html("大笑");
-		   			}
-		   		}
-	   		},
-	   		error: function(){
-	    		//请求出错处理
-	    		alert("出情况了");
-	    		}         
-	  		});
-	}
+
+
 </script>
 <style> 
 .div-a{ float:left;width:60%;height:60%;border:1px solid #F00} 
@@ -142,12 +165,11 @@ span{ font-size:25px }
 <!-- 		<input type="button" id="snap" style="width:100px;height:35px;" value="拍 照" /> -->
 <!-- 		<input type="button" onclick="CatchCode();" style="width:100px;height:35px;" value="上传服务器" /> -->
 		
-		<h1>人脸检测实时数据</h1>
-		<span>年龄：</span><span id="age"></span><br/>
-		<span>颜值：</span><span id="beauty" ></span><br/>
-		<span>性别：</span><span id="gendergender"></span><br/>
-		<span>是否戴眼镜:</span><span id="glasses"></span><br/>
-		<span>表情：</span><span id="expression"></span><br/>
+		<h1>人脸检测数据</h1>
+		<span>姓名：</span><span id="name"></span><br/>
+		<span>电话：</span><span id="phone" ></span><br/>
+		<span>QQ：</span><span id="qq"></span><br/>
+		<span>检测结果：</span><span id="msg"></span><br/>
 	</div> 
 		
 	</body>

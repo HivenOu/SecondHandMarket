@@ -1,4 +1,4 @@
-package com.secondhandmarket.pojo.baidu;
+package com.secondhandmarket.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -14,5 +14,5 @@ public class UserResult{
     @JsonProperty("face_token")
     private String faceToken;
     @JsonProperty("user_list")
-    private List<User> userList;
+    private List<UserDto> userDtoList;
 }

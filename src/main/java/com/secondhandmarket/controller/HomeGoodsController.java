@@ -117,8 +117,10 @@ public class HomeGoodsController {
             goods.setImageUrl(collect.get(goods.getId()));
         }
         model.addAttribute("goodsList7",goodsList7);
-        //todo 查询公告栏信息
+        //查询公告栏信息
         Announcement announcement = adminService.getAnnouncement();
+        Optional<Announcement> announcement1 = Optional.of(announcement);
+        announcement=announcement1.orElseGet(()->new Announcement("暂无","暂无","暂无"));
         //每日推荐
         model.addAttribute("today_recommend",announcement.getTodayRecommend());
         //违规信息

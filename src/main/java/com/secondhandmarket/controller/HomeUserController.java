@@ -83,42 +83,6 @@ public class HomeUserController {
         }
     }
 
-    /**
-     * 前台会员注销
-     *
-     * @param session
-     * @return
-     */
-    @ResponseBody
-    @PostMapping("/face-login")
-    public ResultCommon faceLogin(String data,HttpSession session, HttpServletRequest request) {
-        try {
-            saveFile(data);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        User loginUser = userService.getOne(new QueryWrapper<User>().eq("phone", "17828167440").eq("password", "123456").eq("isdel", 0));
-        if (loginUser != null) {
-            if (loginUser.getStatus() == 0) {
-                session.setAttribute("loginUser", loginUser);
-
-                //钱包
-                Purse purse = purseService.getOne(new QueryWrapper<Purse>().eq("user_id", loginUser.getId()));
-                session.setAttribute("purse", purse);
-                //登录成功获取IP地址，更新到数据库！数据库存储最近一次登录的IP地址
-                String ip = request.getRemoteAddr();
-                loginUser.setLastLogin(ip);
-                userService.updateById(loginUser);
-                return ResultCommon.success(ResultCode.SUCCESS);
-            } else {
-                //账户被冻结
-                return ResultCommon.fail(ResultCode.DONGJIE_PHONE_PASSWORD);
-            }
-        } else {
-            //账户密码错误
-            return ResultCommon.fail(ResultCode.ERROR_PHONE_PASSWORD);
-        }
-    }
     @GetMapping("/to-face-login")
     public String toFaceLogin(HttpSession session) {
         return "/goods/commons/faceLogin";  //跳转人脸识别

@@ -40,7 +40,7 @@ public class AdminController {
         // 系统验证码
         String checkcode= (String) session.getAttribute("checkcode");
         //checkcode.equalsIgnoreCase(code)
-        if(true){
+        if(checkcode.equalsIgnoreCase(code)){
             Admin loginAdmin = adminService.adminLogin(admin);
             if(loginAdmin!=null){
                 //登录成功

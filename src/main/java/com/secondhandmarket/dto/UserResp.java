@@ -1,4 +1,4 @@
-package com.secondhandmarket.pojo.baidu;
+package com.secondhandmarket.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -10,12 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserResp {
     @JsonProperty("error_code")
-    private int errorCode;
+    private Integer errorCode;
     @JsonProperty("error_msg")
     private String errorMsg;
     @JsonProperty("log_id")
-    private int logId;
-    private int timestamp;
-    private int cached;
+    private Long logId;
+    private Long timestamp;
+    private Long cached;
     private UserResult result;
 }

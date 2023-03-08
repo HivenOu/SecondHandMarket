@@ -1,13 +1,23 @@
 package com.secondhandmarket.utils;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.secondhandmarket.dto.UserDto;
+import com.secondhandmarket.dto.UserResp;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -86,6 +96,33 @@ public class AuthService {
             e.printStackTrace(System.err);
         }
         return null;
+    }
+
+    public static List<UserDto> getFaceInfo(byte[] bytes){
+        String s1 = Base64.getEncoder().encodeToString(bytes);
+        Map<String, Object> map = new HashMap<>();
+        map.put("image", s1);
+        map.put("image_type", "BASE64");
+        map.put("group_id_list", "hiven");
+        map.put("quality_control", "LOW");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String s;
+        try {
+            s = objectMapper.writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        // 请求头
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Content-Type", "application/json;charset=UTF-8");
+        // 请求
+        HttpEntity<String> request = new HttpEntity<>(s, headers);
+        RestTemplate build = new RestTemplateBuilder().build();
+        ResponseEntity<UserResp> userRespResponseEntity = build.postForEntity("https://aip.baidubce.com/rest/2.0/face/v3/search?access_token=" + getAuth(), request, UserResp.class);
+        UserResp body = userRespResponseEntity.getBody();
+        System.out.println(body.getResult().getFaceToken());
+        return body.getResult().getUserDtoList();
     }
 
 }
