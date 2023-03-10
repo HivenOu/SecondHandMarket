@@ -47,7 +47,9 @@ jobs:
         echo ${{ steps.meta.outputs.tags }}
         mvn -B compile jib:build -Dmaven.test.skip=true \
         -Djib.from.image=circleci/jdk8:0.1.1 \
-        -Djib.to.image=${{ secrets.SWR_URL }}/${{ steps.meta.outputs.tags }} \
+        -Djib.to.image=${{ steps.meta.outputs.tags }} \
         -Djib.to.auth.username=${{ secrets.SWR_USER }} \
         -Djib.to.auth.password=${{ secrets.SWR_PASSWORD }} \
+        -Djib.platform.os=linux \
+        -Djib.platform.architecture=amd64 \
         --file pom.xml
