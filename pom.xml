@@ -147,7 +147,7 @@
                     </container>
                     <allowInsecureRegistries>true</allowInsecureRegistries>
                 </configuration>
-                <executions>
+  <!--              <executions>
                     <execution>
                         <id>build-image</id>
                         <phase>compile</phase>
@@ -155,7 +155,7 @@
                             <goal>build</goal>
                         </goals>
                     </execution>
-                </executions>
+                </executions>-->
             </plugin>
         </plugins>
 

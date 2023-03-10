@@ -28,8 +28,6 @@ public class AuthService {
 
     // api: https://aip.baidubce.com/rest/2.0/face/v3/search
     //appid ： 31044248
-    //apiKey； xONXRBZZezWyv35Dn4Ky4yxp
-    // apiSecret ： Z9gC5eKD6MFjbInp7IB22nA3Q6E4pdLZ
     /**
      * 获取权限token
      * @return 返回示例：
@@ -39,10 +37,8 @@ public class AuthService {
      * }
      */
     public static String getAuth() {
-        // 官网获取的 API Key 更新为你注册的
-        String clientId = "xONXRBZZezWyv35Dn4Ky4yxp";
-        // 官网获取的 Secret Key 更新为你注册的
-        String clientSecret = "Z9gC5eKD6MFjbInp7IB22nA3Q6E4pdLZ";
+        String clientId =System.getenv().get("BCE_CLIENT_ID");
+        String clientSecret = System.getenv().get("BCE_CLIENT_SECRET");
         return getAuth(clientId, clientSecret);
     }
 
@@ -99,11 +95,13 @@ public class AuthService {
     }
 
     public static List<UserDto> getFaceInfo(byte[] bytes){
+        String bce_group_id = System.getenv().get("BCE_GROUP_ID");
+        log.info("bce group id from env is :{}",bce_group_id);
         String s1 = Base64.getEncoder().encodeToString(bytes);
         Map<String, Object> map = new HashMap<>();
         map.put("image", s1);
         map.put("image_type", "BASE64");
-        map.put("group_id_list", "hiven");
+        map.put("group_id_list", bce_group_id);
         map.put("quality_control", "LOW");
         ObjectMapper objectMapper = new ObjectMapper();
         String s;
