@@ -44,12 +44,11 @@ jobs:
           type=sha,enable=true,priority=100,prefix={{branch}}-,suffix=,format=short
     - name: Build with Maven Jib
       run: |
-        echo ${{ steps.meta.outputs.tags }}
         mvn -B compile jib:build -Dmaven.test.skip=true \
         -Djib.from.image=circleci/jdk8:0.1.1 \
         -Djib.to.image=${{ steps.meta.outputs.tags }} \
         -Djib.to.auth.username=${{ secrets.SWR_USER }} \
         -Djib.to.auth.password=${{ secrets.SWR_PASSWORD }} \
         -Djib.platform.os=linux \
-        -Djib.platform.architecture=amd64 \
-        --file pom.xml
+        -Djib.alwaysCacheBaseImage=true \
+        -Djib.platform.architecture=amd64
