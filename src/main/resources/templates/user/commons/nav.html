@@ -18,7 +18,7 @@
         <a class="btn" style="width: 98%;background-color: rgb(79, 190, 246);color:rgba(255, 255, 255, 1);" href="/purse/toPurseResult">我的钱包：￥<span th:text="${session.purse.balance}">XXX</span></a>
         <input type="hidden" th:value="${session.purse.recharge}" id="recharge"/>
         <input type="hidden" th:value="${session.purse.withdrawals}" id="withdrawals"/>
-        <span class="btn" data-toggle="modal" data-target="#myModal" style="width: 98%;background-color: rgb(79, 190, 246); color:rgba(255, 255, 255, 1);margin-top:0.5cm;">我的信用积分：<span th:text="${session.loginUser.power}">XXX</span></span>
+        <span class="btn" data-toggle="modal" data-target="#myModal" style="width: 98%;background-color: rgb(79, 190, 246); color:rgba(255, 255, 255, 1);margin-top:0.25cm;">我的信用积分：<span th:text="${session.loginUser.power}">XXX</span></span>
     </div>
     <div class="home_nav">
         <ul>
