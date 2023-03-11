@@ -135,8 +135,8 @@
                 <version>3.3.1</version>
                 <configuration>
                     <container>
-                        <workingDirectory>/application</workingDirectory>
-                        <volumes>/application/log</volumes>
+                        <workingDirectory>/app</workingDirectory>
+                        <!--?<volumes>/application/log</volumes>-->
                         <environment>
                             <TZ>Asia/Shanghai</TZ>
                         </environment>
