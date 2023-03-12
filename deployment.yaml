@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shm-deployment
+  namespace: hiven
+  labels:
+    app: shm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shm
+  template:
+    metadata:
+      labels:
+        app: shm
+    spec:
+      containers:
+        - name: shm
+          image: {{ image }}
+          envFrom:
+          - secretRef:
+              name: baidu-bce
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+      restartPolicy: Always
+      imagePullSecrets:
+      - name: huawei-swr-long

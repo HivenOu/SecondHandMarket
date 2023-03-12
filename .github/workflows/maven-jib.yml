@@ -52,3 +52,14 @@ jobs:
         -Djib.platform.os=linux \
         -Djib.alwaysCacheBaseImage=true \
         -Djib.platform.architecture=amd64
+    - name: Fix image in deploy yaml
+      # 更新build/deployment.yaml中的image
+      run: |
+        echo "image is ${{ steps.meta.outputs.tags }}"
+        sed -i "s#{{ image }}#${{ steps.meta.outputs.tags }}#g" ./deployment.yaml
+    #      - uses: steebchen/kubectl@v2.0.0
+    - uses: HivenOu/cd-action@main
+      name: Deploy to k8s(k3s)
+      with:
+        config: ${{ secrets.ALI_KUBECONFIG }}
+        command: apply -f ./deployment.yaml
