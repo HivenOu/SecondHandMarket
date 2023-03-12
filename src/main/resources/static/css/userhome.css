@@ -94,9 +94,9 @@ ul {
 
 #user_nav .user_info {
 	width: 200px;
-	height: 265px;
+	height: 205px;
 	position: relative;
-	margin-top: 5px
+	margin-top: 1px
 }
 
 #user_nav .user_info .head_img {
