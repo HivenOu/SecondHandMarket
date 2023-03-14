@@ -1,7 +1,11 @@
 package com.secondhandmarket.controller;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.base.Strings;
+import com.secondhandmarket.dto.UserTrs;
 import com.secondhandmarket.pojo.Goods;
 import com.secondhandmarket.pojo.Image;
 import com.secondhandmarket.pojo.Purse;
@@ -19,17 +23,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @Controller
@@ -55,8 +55,8 @@ public class HomeUserController {
      */
     @ResponseBody
     @PostMapping("/login")
-    public ResultCommon login(User user, HttpSession session, HttpServletRequest request) {
-        User loginUser = userService.getOne(new QueryWrapper<User>().eq("phone", user.getPhone()).eq("password", user.getPassword()).eq("isdel", 0));
+    public ResultCommon login(UserTrs user, HttpSession session, HttpServletRequest request) {
+        User loginUser = userService.getOne(new QueryWrapper<User>().eq("phone", user.getMobile()).eq("password", user.getPwd()).eq("isdel", 0));
         if (loginUser != null) {
             if (Strings.isNullOrEmpty(user.getRole())){
                 return ResultCommon.fail(ResultCode.ROLE_NULL);
@@ -86,22 +86,6 @@ public class HomeUserController {
     @GetMapping("/to-face-login")
     public String toFaceLogin(HttpSession session) {
         return "/goods/commons/faceLogin";  //跳转人脸识别
-    }
-
-    private void saveFile(String data) throws Exception {
-        try {
-            Base64.Decoder decoder = Base64.getDecoder();
-            byte[] bytes1 = decoder.decode(data);
-            String fileName = UUID.randomUUID() + ".png";
-            String filePath = this.getClass().getResource("/").getPath() + "/static/img/people/" + fileName;
-            File path = new File(filePath);
-            FileOutputStream writer = new FileOutputStream(path);
-            writer.write(bytes1);
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException();
-        }
     }
 
     /**
@@ -138,6 +122,19 @@ public class HomeUserController {
             e.printStackTrace();
             return ResultCommon.fail(ResultCode.FAIL);
         }
+    }
+
+    @GetMapping("/check-phone")
+    @ResponseBody
+    public ResultCommon checkPhone(@RequestParam String phone){
+        if(StrUtil.isBlank(phone)){
+            return ResultCommon.success(ResultCode.SUCCESS,true);
+        }
+        List<User> list = userService.list(new LambdaQueryWrapper<User>().eq(User::getPhone, phone).eq(User::getIsdel, 0));
+        if (CollectionUtil.isEmpty(list)){
+            return ResultCommon.success(ResultCode.SUCCESS,true);
+        }
+        return ResultCommon.success(ResultCode.SUCCESS,false);
     }
 
 

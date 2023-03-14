@@ -14,19 +14,22 @@
                 </a>
                 <form id="registerForm" action="#" method="post" commandName="user" role="form">
                     <div class="input-field col s12">
-                        <input type="text" name="username" required="required" class="validate ng-pristine ng-empty ng-invalid ng-invalid-required ng-valid-pattern ng-touched" />
+                        <input type="text" onblur="checkUsername()" name="username" required="required" class="validate ng-pristine ng-empty ng-invalid ng-invalid-required ng-valid-pattern ng-touched" />
                         <label>昵称</label>
+                        <em class="error" id="nameErr"></em>
                     </div>
                     <div class="input-field col s12">
-                        <input type="text" name="phone" required="required" pattern="^1[0-9]{10}$" class="validate ng-pristine ng-empty ng-invalid ng-invalid-required ng-valid-pattern ng-touched" />
+                        <input type="text" onblur="checkPhone()" name="phone" maxlength="11"  class="validate ng-pristine ng-empty ng-invalid ng-invalid-required ng-valid-pattern ng-touched" />
                         <label>手机</label>
+                        <em class="error" id="phoneErr"></em>
                     </div>
                     <div class="input-field col s12">
-                        <input type="text" name="studentNo" required="required" pattern="^1[0-9]{10}$" class="validate ng-pristine ng-empty ng-invalid ng-invalid-required ng-valid-pattern ng-touched" />
+                        <input type="text" onblur="checkStudentNo()" name="studentNo" required="required" class="validate ng-pristine ng-empty ng-invalid ng-invalid-required ng-valid-pattern ng-touched" />
                         <label>学号</label>
+                        <em class="error" id="studentNoErr"></em>
                     </div>
                     <div class="input-field col s12">
-                        <input type="text" name="college" required="required" id="studentNo" list="appNamelist" class="validate ng-pristine ng-empty ng-invalid ng-invalid-required ng-valid-pattern ng-touched" />
+                        <input type="text" onblur="checkCollege()" name="college" required="required" list="appNamelist" class="validate ng-pristine ng-empty ng-invalid ng-invalid-required ng-valid-pattern ng-touched" />
                         <datalist id="appNamelist">
                             <option>财管系</option>
                             <option>信管系</option>
@@ -35,10 +38,12 @@
                             <option>外语系</option>
                         </datalist>
                         <label>学院</label>
+                        <em class="error" id="collegeErr"></em>
                     </div>
                     <div class="input-field col s12">
-                        <input type="password" name="password" required="required" class="validate ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" />
+                        <input type="password" onblur="checkPassword()" name="password" required="required" class="validate ng-pristine ng-untouched ng-empty ng-invalid ng-invalid-required" />
                         <label>密码</label>
+                        <em class="error" id="passwordErr"></em>
                     </div>
                     <div class="input-field col s12">
                         <em id="errorMsg" style="color: red"></em>
@@ -59,7 +64,106 @@
     </div>
     <script type="text/javascript">
 
+        function checkUsername() {
+            var name = document.querySelector("input[name='username']").value;
+            if(name == "" || name == null){
+                printError("nameErr", "用户名不能为空");
+            }else {
+                printError("nameErr", "");
+            }
+        }
+
+        function checkPhone() {
+            var phone = document.querySelector("input[name='phone']").value;
+            var regex = /^[1]\d{10}$/;
+            if(phone == "" || phone == null){
+                printError("phoneErr", "手机号码不能为空");
+            }else if(regex.test(phone) == false){
+                printError("phoneErr", "您输入的手机号码有误");
+            }else {
+                //校验手机号码
+                $.ajax({
+                    url:'/check-phone?phone='+phone,
+                    type:'GET',
+                    dataType:'json',
+                    success:function(result){
+                      if (!result.data){
+                          printError("phoneErr", "此手机号已经被注册请直接登录");
+                          return false
+                      }
+                    },
+                    error:function(){
+                        alert('请求超时或系统出错!');
+                    }
+                });
+                printError("phoneErr", "");
+            }
+        }
+
+        function checkCollege() {
+            var college = document.querySelector("input[name='college']").value;
+            if(college == "" || college == null){
+                printError("collegeErr", "学院不能为空");
+            }else {
+                printError("collegeErr", "");
+            }
+        }
+        function checkStudentNo() {
+            var studentNo = document.querySelector("input[name='studentNo']").value;
+            if(studentNo == "" || studentNo == null){
+                printError("studentNoErr", "学号不能为空");
+            }else{
+                printError("studentNoErr", "");
+            }
+        }
+
+        function checkPassword(){
+            var pwd = document.querySelector("input[name='password']").value;
+            if(pwd == "" || pwd == null){
+                printError("passwordErr", "密码不能为空");
+            }else {
+                printError("passwordErr", "");
+            }
+        }
+
+        // 显示错误消息
+        function printError(elemId, hintMsg) {
+            document.getElementById(elemId).innerHTML = hintMsg;
+        }
+
         function register() {
+            //验证表单
+            var name = document.querySelector("input[name='username']").value;
+            var phone = document.querySelector("input[name='phone']").value;
+            var college = document.querySelector("input[name='college']").value;
+            var studentNo = document.querySelector("input[name='studentNo']").value;
+            var pwd = document.querySelector("input[name='password']").value;
+            if(name == "" || name == null){
+                printError("nameErr", "用户名不能为空");
+                return false;
+            }
+            if(phone == "" || phone == null){
+                printError("phoneErr", "手机号码不能为空");
+                return false;
+            }else{
+                var regex = /^[1]\d{10}$/;
+                if(regex.test(phone) === false) {
+                    printError("phoneErr", "您输入的手机号码有误");
+                    return false;
+                }
+            }
+            if(studentNo == "" || studentNo == null){
+                printError("studentNoErr", "学号不能为空");
+                return false;
+            }
+            if(college == "" || college == null){
+                printError("collegeErr", "学院不能为空");
+                return false;
+            }
+            if(pwd == "" || pwd == null){
+                printError("passwordErr", "密码不能为空");
+                return false;
+            }
             var data=$("#registerForm").serialize();
             //alert(JSON.stringify(data));
             $.post("/register",data,function (result) {
