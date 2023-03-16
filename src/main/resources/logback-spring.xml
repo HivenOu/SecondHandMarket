@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="false" scanPeriod="60 seconds" debug="false">
+    <contextName>shm</contextName>
+    <property name="dir" value="./logs"/>
+
+   <!-- <contextListener class="com.ofpay.logback.TtlMdcListener"/>-->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <charset>UTF-8</charset>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{requestId}] %-5level %-50logger{50}: %msg%n</Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="requestLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <Prudent>false</Prudent>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${dir}/%d{yyyy-MM-dd}/request.log.zip</fileNamePattern>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{requestId}] %-5level %-50logger{50}: %msg%n</Pattern>
+        </layout>
+    </appender>
+
+    <!-- 输出到error -->
+    <appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <fileNamePattern>${dir}/%d{yyyy-MM-dd}/error.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <!--日志文件最大的大小-->
+            <maxFileSize>50MB</maxFileSize>
+            <!--日志文件保留天数-->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <!--格式化输出：%d表示日期，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{requestId}] %-5level %-50logger{50}: %msg%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter"><!-- 只打印ERROR日志 -->
+            <level>ERROR</level>
+        </filter>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="console"/>
+        <appender-ref ref="error"/>
+    </root>
+ <!--   <logger name="shm" additivity="false" level="DEBUG">
+        <appender-ref ref="console"/>
+        <appender-ref ref="error"/>
+    </logger>-->
+    <logger name="com.secondhandmarket.service" additivity="true">
+        <appender-ref ref="requestLog"/>
+    </logger>
+
+</configuration>
