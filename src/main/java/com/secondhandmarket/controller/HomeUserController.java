@@ -61,7 +61,7 @@ public class HomeUserController {
             if (Strings.isNullOrEmpty(user.getRole())){
                 return ResultCommon.fail(ResultCode.ROLE_NULL);
             }
-            if (loginUser.getStatus() == 0) {
+            if (loginUser.getStatus() == 1) {
                 session.setAttribute("loginUser", loginUser);
 
                 //钱包

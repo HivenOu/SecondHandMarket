@@ -13,6 +13,7 @@ import com.secondhandmarket.pojo.User;
 import com.secondhandmarket.service.IPurseService;
 import com.secondhandmarket.service.IUserService;
 import com.secondhandmarket.utils.AuthService;
+import com.secondhandmarket.utils.ResultCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -75,6 +76,14 @@ public class FaceRecognitionController {
             User one = userService.getOne(new LambdaQueryWrapper<User>().eq(User::getId, userDto.getUserId()));
             if(BeanUtil.isEmpty(one)){
                 map.put("msg", "您账号异常，请联系管理员处理");
+                map.put("code", "500");
+                modelMap.put("success", true);
+                String strjson = objectMapper.writeValueAsString(map);
+                modelMap.put("strjson", strjson);
+                return modelMap;
+            }
+            if (one.getStatus().equals(0)){
+                map.put("msg", ResultCode.DONGJIE_PHONE_PASSWORD.getMsg());
                 map.put("code", "500");
                 modelMap.put("success", true);
                 String strjson = objectMapper.writeValueAsString(map);

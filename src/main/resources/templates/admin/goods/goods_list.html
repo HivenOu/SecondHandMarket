@@ -108,7 +108,7 @@
                             <span th:if="${goods.catelogId==6}"> 体育器材</span>
                             <span th:if="${goods.catelogId==7}"> 生活百货</span>
                     </td>
-                    <td th:text="|￥${goods.realPrice}|">XXX</td>
+                    <td th:text="|￥${goods.price}|">XXX</td>
                     <td th:text="${goods.startTime}">XXX</td>
                     <td >
                         <button th:if="${goods.informNum} > 0" type="button"  class="btn btn-primary btn-sm" th:text="${goods.informNum}" th:onclick="|checkInform(${goods.id},${goods.status})|">XXXX</button>
@@ -170,13 +170,13 @@
                     <div class="form-group">
                         <label class="col-sm-4 control-label" >原价:</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="my_price" name="price" style="margin-top: 8px;"/>
+                            <input type="text" class="form-control" id="my_price" name="realPrice" style="margin-top: 8px;"/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-4 control-label" >售价:</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="my_realPrice" name="realPrice" style="margin-top: 8px;"/>
+                            <input type="text" class="form-control" id="my_realPrice" name="price" style="margin-top: 8px;"/>
                         </div>
                     </div>
                     <div class="form-group">
@@ -238,13 +238,13 @@
                     <div class="form-group">
                         <label class="col-sm-4 control-label" >原价:</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="my_price" name="price" readonly style="margin-top: 8px;"/>
+                            <input type="text" class="form-control" id="my_price" name="realPrice" readonly style="margin-top: 8px;"/>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-sm-4 control-label" >售价:</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="my_realPrice" name="realPrice" readonly style="margin-top: 8px;"/>
+                            <input type="text" class="form-control" id="my_realPrice" name="price" readonly style="margin-top: 8px;"/>
                         </div>
                     </div>
                     <div class="form-group">
