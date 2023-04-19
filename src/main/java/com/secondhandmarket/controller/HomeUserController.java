@@ -112,7 +112,8 @@ public class HomeUserController {
     public ResultCommon register(User user) {
         try {
             user.setIsdel(0);
-            user.setStatus(0);
+            // 状态为1是可用 为0是冻结
+            user.setStatus(1);
             user.setPower(100);
             user.setGoodsNum(0);
             user.setCreateAt(DateUtils.nowTime());
